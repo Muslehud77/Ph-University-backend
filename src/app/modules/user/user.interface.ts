@@ -7,3 +7,5 @@ export type TUser = {
     status : 'in-progress' | 'blocked';
     isDeleted:boolean
 }
+
+

@@ -66,7 +66,7 @@ const localGuardianValidationSchema = z.object({
 // Define the validation schema for Student
 const zodStudentValidationSchema = z.object({
   id: z.string().min(1, { message: 'ID is required' }).trim(),
-  password: z.string().min(5, { message: 'password is required' }).trim(),
+  user: z.string(),
   name: userNameValidationSchema,
   gender: z.enum(['male', 'female', 'others'], {
     message: "The gender field can only be 'male', 'female' or 'other'",

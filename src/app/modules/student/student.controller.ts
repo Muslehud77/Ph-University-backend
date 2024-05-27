@@ -2,39 +2,6 @@ import { Request, Response } from 'express';
 
 import { studentServices } from './student.service';
 
-import zodStudentValidationSchema from './student.zodValidation';
-
-const createStudent = async (req: Request, res: Response) => {
-  try {
-    //* data validation using Joi
-    // const { value: student } = await JoiStudentValidationSchema.validateAsync(
-    //   req.body.student,
-    // );
-
-    //* data validation using Zod
-    const student = await zodStudentValidationSchema.parseAsync(
-      req.body.student,
-    );
-
-    // will call service func to send this data
-    const result = await studentServices.createStudentIntoDB(student);
-    // send response
-
-    res.status(200).json({
-      success: true,
-      message: 'Student is Created Successfully',
-      data: result,
-    });
-  } catch (err: any) {
-    console.log(err);
-
-    res.status(500).json({
-      success: false,
-      message: 'Could not complete the request',
-      data: err.message,
-    });
-  }
-};
 
 const getStudentByID = async (req: Request, res: Response) => {
   try {
@@ -102,7 +69,6 @@ const deleteStudent = async (req: Request, res: Response) => {
 };
 
 export const studentControllers = {
-  createStudent,
   getStudentByID,
   getAllStudent,
   deleteStudent,
