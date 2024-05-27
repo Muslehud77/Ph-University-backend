@@ -4,6 +4,7 @@ import { Student } from '../student/student.model';
 import { TUser } from './user.interface';
 
 import { userModel } from './user.model';
+import { userValidation } from './user.validation';
 
 const createStudentIntoDB = async (password: string, studentData: TStudent) => {
   const userData: Partial<TUser> = {
@@ -13,16 +14,17 @@ const createStudentIntoDB = async (password: string, studentData: TStudent) => {
   };
 
   //creating a user first 
-  const result = await userModel.create(userData);
-
-  if(Object.keys(result).length){
-    studentData.id = result.id
-    studentData.user =  result._id
+ 
+  const newUser = await userModel.create(userData);
+  // console.log(newUser);
+  console.log(studentData);
+  if(Object.keys(newUser).length){
+    studentData.id = newUser.id
+    studentData.user =  newUser._id
+    const newStudent = await Student.create(studentData)
+    return newStudent
   }
 
-  const student = await Student.create()
-
-  return result;
 };
 
 export const userServices = {

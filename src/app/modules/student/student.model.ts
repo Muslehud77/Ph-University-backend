@@ -175,11 +175,7 @@ const studentSchema = new Schema<TStudent, StudentModel>(
       required: [true, 'Local Guardian Details are required'],
     },
     profileImg: stringTypeOptional,
-    isActive: {
-      enum: ['active', 'inactive'],
-      ...stringTypeOptional,
-      default: 'active',
-    },
+   
     isDeleted: {
       type: Boolean,
       default: false,
@@ -197,24 +193,6 @@ studentSchema.virtual('fullName').get(function () {
   return this.name.firstName + this.name.middleName + this.name.lastName;
 });
 
-//pre save middleware/hook : will work on create() save() method
-studentSchema.pre('save', async function () {
-  // console.log(this,'pre hook : we will save the data');
-
-  //hashing password and save into DB
-  const user = this;
-
-  user.password = await bcrypt.hash(user.password, config.hashSaltRounds);
-});
-
-//post save middleware/hook
-studentSchema.post('save', function (doc, next) {
-  // console.log(this, 'post hook : we saved our data');
-
-  doc.password = '';
-
-  next();
-});
 
 // creating a custom static method
 

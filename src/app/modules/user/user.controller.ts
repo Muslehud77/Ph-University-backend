@@ -5,7 +5,7 @@ import { userServices } from './user.service';
 const createStudent = async (req: Request, res: Response) => {
   try {
     //* data validation using Joi
-    const { password,studentData } = req.body
+    const { password,student } = req.body
 
     //* data validation using Zod
     // const student = await zodStudentValidationSchema.parseAsync(
@@ -13,7 +13,7 @@ const createStudent = async (req: Request, res: Response) => {
     // );
 
     // will call service func to send this data
-    const result = await userServices.createStudentIntoDB(password,studentData);
+    const result = await userServices.createStudentIntoDB(password,student);
     // send response
 
     res.status(200).json({
@@ -31,3 +31,6 @@ const createStudent = async (req: Request, res: Response) => {
     });
   }
 };
+
+
+export const userController = {createStudent}

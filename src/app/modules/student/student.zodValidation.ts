@@ -102,7 +102,7 @@ const zodStudentValidationSchema = z.object({
   }),
   localGuardian: localGuardianValidationSchema,
   profileImg: z.string().trim().optional(),
-  isActive: z.enum(['active', 'inactive']).default('active').optional(),
+  
   isDeleted: z.boolean().default(false),
 });
 
