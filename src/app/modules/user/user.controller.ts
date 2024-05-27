@@ -1,8 +1,11 @@
-import { Request, Response } from 'express';
+import { NextFunction, Request, Response } from 'express';
 
 import { userServices } from './user.service';
+import sendResponse from '../../utils/sendResponse';
+import { TStudent } from '../student/student.interface';
+import httpStatus from 'http-status';
 
-const createStudent = async (req: Request, res: Response) => {
+const createStudent = async (req: Request, res: Response,next:NextFunction) => {
   try {
     //* data validation using Joi
     const { password,student } = req.body
@@ -13,22 +16,19 @@ const createStudent = async (req: Request, res: Response) => {
     // );
 
     // will call service func to send this data
-    const result = await userServices.createStudentIntoDB(password,student);
+    const result = await userServices.createStudentIntoDB(password,student) as TStudent;
     // send response
 
-    res.status(200).json({
+    const data = {
+      statusCode : httpStatus.OK,
       success: true,
       message: 'Student is Created Successfully',
       data: result,
-    });
-  } catch (err: any) {
-    console.log(err);
+    };
+    sendResponse<TStudent>(res,data)
 
-    res.status(500).json({
-      success: false,
-      message: 'Could not complete the request',
-      data: err.message,
-    });
+  } catch (err) {
+    next(err)
   }
 };
 

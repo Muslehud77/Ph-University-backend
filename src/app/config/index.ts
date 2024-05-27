@@ -5,7 +5,7 @@ dotenv.config({ path: path.join(process.cwd(), '.env') });
 
 const dbUri = process.env.DATABASE_URI;
 const port = process.env.PORT;
-const hashSaltRounds = process.env.HASH_SALT;
+const hashSaltRounds = parseInt(process.env.HASH_SALT as string) as number;
 const defaultPassword = process.env.DEFAULT_PASS as string;
 
 export default { dbUri, port, hashSaltRounds, defaultPassword };

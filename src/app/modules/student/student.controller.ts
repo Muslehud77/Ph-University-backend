@@ -1,9 +1,12 @@
-import { Request, Response } from 'express';
+import { NextFunction, Request, Response } from 'express';
 
 import { studentServices } from './student.service';
 
-
-const getStudentByID = async (req: Request, res: Response) => {
+const getStudentByID = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
   try {
     const id: string = req.params.id;
     const result = await studentServices.getStudentByIdFromDB(id);
@@ -21,16 +24,15 @@ const getStudentByID = async (req: Request, res: Response) => {
       data: result,
     });
   } catch (err) {
-    console.log(err);
-    res.status(500).json({
-      success: false,
-      message: 'Could not complete the request',
-      data: err,
-    });
+    next(err);
   }
 };
 
-const getAllStudent = async (req: Request, res: Response) => {
+const getAllStudent = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
   try {
     const result = await studentServices.getAllStudentsFromDB();
 
@@ -40,16 +42,15 @@ const getAllStudent = async (req: Request, res: Response) => {
       data: result,
     });
   } catch (err) {
-    console.log(err);
-    res.status(500).json({
-      success: false,
-      message: 'Could not complete the request',
-      data: err,
-    });
+    next(err);
   }
 };
 
-const deleteStudent = async (req: Request, res: Response) => {
+const deleteStudent = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
   try {
     const studentId: string = req.params.id;
     const result = await studentServices.deleteStudentFromDB(studentId);
@@ -59,12 +60,7 @@ const deleteStudent = async (req: Request, res: Response) => {
       data: result,
     });
   } catch (err) {
-    console.log(err);
-    res.status(500).json({
-      success: false,
-      message: 'Could not complete the request',
-      data: err,
-    });
+    next(err);
   }
 };
 

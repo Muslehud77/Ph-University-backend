@@ -1,7 +1,7 @@
 import { Schema, model } from 'mongoose';
 import validator from 'validator';
 import config from '../../config';
-import bcrypt from 'bcrypt';
+
 import {
   TGuardian,
   TLocalGuardian,
