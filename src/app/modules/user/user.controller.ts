@@ -1,11 +1,12 @@
-import { NextFunction, Request, Response } from 'express';
+import { RequestHandler } from 'express';
 
 import { userServices } from './user.service';
 import sendResponse from '../../utils/sendResponse';
 import { TStudent } from '../student/student.interface';
 import httpStatus from 'http-status';
+import catchAsync from '../../utils/catchAsync';
 
-const createStudent = async (req: Request, res: Response,next:NextFunction) => {
+const createStudent = catchAsync(async (req, res,next) => {
   try {
     //* data validation using Joi
     const { password,student } = req.body
@@ -30,7 +31,7 @@ const createStudent = async (req: Request, res: Response,next:NextFunction) => {
   } catch (err) {
     next(err)
   }
-};
+});
 
 
 export const userController = {createStudent}
