@@ -10,6 +10,7 @@ import {
   StudentModel,
   TUserName,
 } from './student.interface';
+import { timeStamp } from 'console';
 
 // Define a constant for the optional string type
 const stringTypeOptional = { type: String, trim: true };
@@ -27,25 +28,14 @@ const userNameSchema = new Schema<TUserName>({
     type: String,
     required: [true, 'First Name is required'],
     trim: true,
-    // validate: {
-    //   validator: function (value: string) {
-    //     const toLowercase = value.toLowerCase();
-    //     const capitalizeString =
-    //       toLowercase.charAt(0).toUpperCase() + toLowercase.slice(1);
-    //     return value === capitalizeString;
-    //   },
-    //   message: '{VALUE} is not capitalized!',
-    // },
+   
   },
   middleName: stringTypeOptional,
   lastName: {
     type: String,
     required: [true, 'Last Name is required'],
     trim: true,
-    // validate: {
-    //   validator: (value: string) => validator.isAlpha(value),
-    //   message: '{VALUE} is not valid',
-    // },
+
   },
 });
 
@@ -125,7 +115,7 @@ const studentSchema = new Schema<TStudent, StudentModel>(
       type: String,
       required: [true, 'Gender is required'],
     },
-    dateOfBirth: stringTypeOptional,
+    dateOfBirth: {type:Date},
     email: {
       type: String,
       required: [true, 'Email is required'],
@@ -185,7 +175,8 @@ const studentSchema = new Schema<TStudent, StudentModel>(
     toJSON: {
       virtuals: true,
     },
-  },
+    timestamps:true
+  }
 );
 
 // mongoose virtuals
