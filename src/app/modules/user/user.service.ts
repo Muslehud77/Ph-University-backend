@@ -7,7 +7,7 @@ import { TUser } from './user.interface';
 
 import { userModel } from './user.model';
 import { generateStudentId } from './user.utils';
-import { userValidation } from './user.validation';
+
 
 const createStudentIntoDB = async (password: string, studentData: TStudent) => {
  

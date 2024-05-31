@@ -2,7 +2,7 @@ import { TAcademicSemester } from "../academicSemester/academicSemester.interfac
 
 import { userModel } from "./user.model";
 
-// for making id we will need year semesterCode 4 digit number
+// for making id we will need year, semesterCode and 4 digit number
 
 const findLastStudentId = async ()=>{
     const lastStudent = await userModel
@@ -22,7 +22,7 @@ export const generateStudentId = async (payload: TAcademicSemester) => {
 
     //if lastSemester year and code matches with the current year and code it will reassign the value of currentId with lastStudent id otherwise the the id counting will start again 
     if(lastStudentId&& lastStudentSemesterCode=== currentSemesterCode && lastStudentSemesterYear === currentSemesterYear){
-        currentId = lastStudentId.substring(4)
+        currentId = lastStudentId.substring(6)
     }
    
    
