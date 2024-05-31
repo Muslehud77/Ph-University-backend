@@ -3,9 +3,7 @@ import { Student } from './student.model';
 
 
 const getStudentByIdFromDB = async (id: string) => {
-  // const studentId = { id: id };
-
-  // const result = await Student.findOne(studentId);
+ 
   const result = await Student.aggregate([{ $match: { id } }]);
 
   return result;
