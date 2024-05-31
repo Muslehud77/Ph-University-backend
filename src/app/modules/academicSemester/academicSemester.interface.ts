@@ -22,7 +22,7 @@ export type TMonth =
 
 export type TAcademicSemester = {
   name: TAcademicSemesterName;
-  year: Date;
+  year: string;
   code: TAcademicSemesterCode;
   startMonth: TMonth;
   endMonth: TMonth;

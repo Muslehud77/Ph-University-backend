@@ -4,7 +4,7 @@ import { AcademicCodes, AcademicMonths, AcademicNames } from './academicSemester
 
 
 
-const academicSemesterValidation = z.object({
+export const academicSemesterValidation = z.object({
   body: z.object({
     name: z.enum(AcademicNames as [string, ...string[]]),
     year: z.string().trim(),
@@ -13,6 +13,13 @@ const academicSemesterValidation = z.object({
     endMonth: z.enum(AcademicMonths as [string, ...string[]]),
   }),
 });
+export const updateAcademicSemesterValidation = z.object({
+  body: z.object({
+    name: z.enum(AcademicNames as [string, ...string[]]).optional(),
+    year: z.string().trim().optional(),
+    code: z.enum(AcademicCodes as [string, ...string[]]).optional(),
+    startMonth: z.enum(AcademicMonths as [string, ...string[]]).optional(),
+    endMonth: z.enum(AcademicMonths as [string, ...string[]]).optional(),
+  }),
+});
 
-
-export default academicSemesterValidation

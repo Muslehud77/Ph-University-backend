@@ -25,7 +25,18 @@ const updateSemesterInDB = async (
   id: string,
   semesterData: TAcademicSemester,
 ) => {
-  const result = await AcademicSemester.updateOne({ _id: id }, semesterData);
+  if (
+    semesterData.name &&
+    semesterData.code &&
+    academicSemesterCodeMapper[semesterData.name] !== semesterData.code
+  ) {
+    throw new Error("Semester name and code aren't matching");
+  }
+  const result = await AcademicSemester.findByIdAndUpdate(
+    { _id: id },
+    semesterData,
+    { new: true },
+  );
   return result;
 };
 

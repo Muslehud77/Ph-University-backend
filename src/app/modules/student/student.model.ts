@@ -116,6 +116,7 @@ const studentSchema = new Schema<TStudent, StudentModel>(
       required: [true, 'Gender is required'],
     },
     dateOfBirth: {type:Date},
+
     email: {
       type: String,
       required: [true, 'Email is required'],
@@ -126,6 +127,7 @@ const studentSchema = new Schema<TStudent, StudentModel>(
         message: '{VALUE} is not a valid email',
       },
     },
+    admissionSemester:{type:Schema.Types.ObjectId, ref: 'AcademicSemesters'},
     contactNumber: {
       type: String,
       required: [true, 'Contact Number is required'],

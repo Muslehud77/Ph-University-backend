@@ -27,12 +27,12 @@ const updateSemester = catchAsync(async (req, res) => {
   const result = await academicSemesterServices.updateSemesterInDB(
     id,
     academicSemesterData,
-  );
+  ) as unknown as TAcademicSemester;
 
   const data = {
     statusCode: httpStatus.OK,
     success: true,
-    message: 'Semester created successfully',
+    message: 'Semester updated successfully',
     data: result,
   };
 

@@ -23,6 +23,7 @@ export type TStudent = {
   gender: 'male' | 'female' | 'others';
   dateOfBirth?: Date;
   email: string;
+  admissionSemester:Types.ObjectId;
   contactNumber: string;
   emergencyContactNo: string;
   bloodGroup?: 'A+' | 'A-' | 'B+' | 'B-' | 'AB+' | 'AB-' | 'O+' | 'O-';
