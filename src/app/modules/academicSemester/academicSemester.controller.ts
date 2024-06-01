@@ -66,7 +66,7 @@ const findAllSemestersFromDB = catchAsync(async (req, res) => {
     data: result,
   };
 
-  sendResponse<TAcademicSemester>(res, data);
+  sendResponse(res, data);
 });
 
 export const AcademicSemesterControllers = {
