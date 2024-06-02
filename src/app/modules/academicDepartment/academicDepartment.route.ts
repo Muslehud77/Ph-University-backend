@@ -1,0 +1,4 @@
+type TAcademicDepartment = {
+    name : string;
+    
+}

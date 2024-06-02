@@ -5,7 +5,7 @@
 
 1. Clone the repository:
     ```
-    git clone https://github.com/Muslehud77/lets-dive-into-mongoose.git
+    git clone https://github.com/Muslehud77/....
     ```
 
 2. Navigate into the project directory:
