@@ -3,7 +3,8 @@ import { TAcademicFaculty } from './academicFaculty.interface';
 
 const academicFacultySchema = new Schema<TAcademicFaculty>(
   {
-    name: { type: String },
+    name: { type: String , unique:true,required:true
+    },
   },
   { timestamps: true },
 );
