@@ -1,6 +1,6 @@
 import { Schema, model } from 'mongoose';
 import validator from 'validator';
-import config from '../../config';
+
 
 import {
   TGuardian,
@@ -10,8 +10,7 @@ import {
   StudentModel,
   TUserName,
 } from './student.interface';
-import { timeStamp } from 'console';
-import AppError from '../../errors/AppError';
+
 
 // Define a constant for the optional string type
 const stringTypeOptional = { type: String, trim: true };
@@ -232,10 +231,10 @@ studentSchema.pre('aggregate', function (next) {
 });
 
 // creating a custom instance method
-// studentSchema.methods.isUserExists = async function(id:string){
-//   const existingUser = await Student.findOne({id})
-//   return existingUser
-// }
+studentSchema.methods.isUserExists = async function(id:string){
+  const existingUser = await Student.findOne({id})
+  return existingUser
+}
 
 // Create the student model
 export const Student = model<TStudent, StudentModel>('Student', studentSchema);

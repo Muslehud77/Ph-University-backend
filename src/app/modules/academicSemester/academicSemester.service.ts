@@ -34,7 +34,8 @@ const updateSemesterInDB = async (
   }
   const result = await AcademicSemester.findByIdAndUpdate(
     { _id: id },
-    semesterData
+    semesterData,
+    { new: true },
   );
   
   return result;

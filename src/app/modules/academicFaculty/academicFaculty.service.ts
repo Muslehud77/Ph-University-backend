@@ -17,7 +17,9 @@ const getAcademicFacultyByIdFromDB = async (id:string)=>{
 }
 
 const updateFacultyByIdFromDB = async(id:string,data : Partial<TAcademicFaculty>)=>{
-    const result = await AcademicFaculty.findByIdAndUpdate({_id:id},data)
+    const result = await AcademicFaculty.findByIdAndUpdate({ _id: id }, data, {
+      new: true,
+    });
     return result
 }
 

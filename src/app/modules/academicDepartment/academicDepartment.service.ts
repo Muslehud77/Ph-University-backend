@@ -27,7 +27,7 @@ const updateAcademicDepartmentInDB = async (
 ) => {
   const result = await AcademicDepartment.findByIdAndUpdate(
     { _id: id },
-    academicDepartment,
+    academicDepartment,{new:true}
   );
   return result;
 };
