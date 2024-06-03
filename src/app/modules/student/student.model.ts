@@ -11,6 +11,7 @@ import {
   TUserName,
 } from './student.interface';
 import { timeStamp } from 'console';
+import AppError from '../../errors/AppError';
 
 // Define a constant for the optional string type
 const stringTypeOptional = { type: String, trim: true };
@@ -195,7 +196,24 @@ studentSchema.statics.isUserExists = async function (id: string) {
   return existingUser;
 };
 
+
+
+
 //query middleware
+
+studentSchema.pre('save', async function (next) {
+
+  const isDepartmentExists = await Student.findOne({
+    email: this.email,
+  });
+ 
+  if (isDepartmentExists) {
+    console.log("Error");
+    throw new Error('Student Already Exists');
+  }
+  next();
+});
+
 studentSchema.pre('find', function (next) {
   this.find({ isDeleted: { $ne: true } });
 
