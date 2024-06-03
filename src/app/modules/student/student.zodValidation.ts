@@ -79,6 +79,7 @@ const createStudentValidationSchema = z.object({
         .trim()
         .email({ message: 'Invalid email format' }),
         admissionSemester:z.string(),
+        academicDepartment:z.string(),
       contactNumber: z
         .string()
         .min(1, { message: 'Contact Number is required' })

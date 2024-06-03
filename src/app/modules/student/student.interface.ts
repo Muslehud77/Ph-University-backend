@@ -18,12 +18,13 @@ export type TUserName = {
 
 export type TStudent = {
   id: string;
-  user:Types.ObjectId;
+  user: Types.ObjectId;
   name: TUserName;
   gender: 'male' | 'female' | 'others';
   dateOfBirth?: Date;
   email: string;
-  admissionSemester:Types.ObjectId;
+  admissionSemester: Types.ObjectId;
+  academicDepartment: Types.ObjectId;
   contactNumber: string;
   emergencyContactNo: string;
   bloodGroup?: 'A+' | 'A-' | 'B+' | 'B-' | 'AB+' | 'AB-' | 'O+' | 'O-';
