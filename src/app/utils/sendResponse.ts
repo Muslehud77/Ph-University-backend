@@ -9,9 +9,9 @@ type TData<T> = {
 };
 
 const sendResponse = <T>(res: Response, data: TData<T>) => {
-//  if(!data.data){
-//   throw new AppError(404,"Not Found!")
-//  }
+ if(!data.data){
+  throw new AppError(404,"Not Found!")
+ }
   res.status(data.statusCode).json({
     success: data.success,
     message: data?.message || 'Request Successful',

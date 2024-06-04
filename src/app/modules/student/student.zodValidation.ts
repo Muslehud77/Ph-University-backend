@@ -109,6 +109,10 @@ const createStudentValidationSchema = z.object({
   }),
 });
 
+
+const updateStudentValidation = createStudentValidationSchema.deepPartial()
+
 export const studentValidations = {
- createStudentValidationSchema
+  createStudentValidationSchema,
+  updateStudentValidation,
 };
