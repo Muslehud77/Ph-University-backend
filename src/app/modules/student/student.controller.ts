@@ -21,8 +21,8 @@ const getStudentByID = catchAsync(async (req, res) => {
 });
 
 const getAllStudent = catchAsync(async (req, res) => {
-  const result = await studentServices.getAllStudentsFromDB();
-
+  const query = req.query
+  const result = await studentServices.getAllStudentsFromDB(query);
   const data = {
     statusCode: httpStatus.OK,
     success: true,

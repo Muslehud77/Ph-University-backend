@@ -15,7 +15,8 @@ app.use('/api/v1', router);
 
 
 //testing
-const testRoute : RequestHandler = (req, res) => {
+const testRoute : RequestHandler = async (req, res) => {
+  
   res.send('Hello World!');
 };
 

@@ -200,18 +200,7 @@ studentSchema.statics.isUserExists = async function (id: string) {
 
 //query middleware
 
-studentSchema.pre('save', async function (next) {
-
-  const isDepartmentExists = await Student.findOne({
-    email: this.email,
-  });
  
-  if (isDepartmentExists) {
-    console.log("Error");
-    throw new Error('Student Already Exists');
-  }
-  next();
-});
 
 studentSchema.pre('find', function (next) {
   this.find({ isDeleted: { $ne: true } });
