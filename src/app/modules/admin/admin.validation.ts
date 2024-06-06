@@ -6,7 +6,7 @@ const createAdminValidationSchema = z.object({
   body: z.object({
     password: z.string().min(5),
     admin: z.object({
-      user: z.string(),
+      user: z.string().optional(),
       managementDepartment: z.string(),
       designation: z.string(),
       name: userNameValidationSchema,
@@ -16,7 +16,7 @@ const createAdminValidationSchema = z.object({
       presentAddress: z.string(),
       permanentAddress: z.string(),
       profileImage: z.string(),
-      isDeleted: z.boolean(),
+      isDeleted: z.boolean().optional(),
     }),
   }),
 });
