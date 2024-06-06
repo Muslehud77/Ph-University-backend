@@ -1,9 +1,11 @@
-import mongoose from 'mongoose';
+import mongoose, { Query } from 'mongoose';
 import { TStudent } from './student.interface';
 import { Student } from './student.model';
 import { userModel } from '../user/user.model';
 import AppError from '../../errors/AppError';
 import httpStatus from 'http-status';
+import QueryBuilder from '../../builder/QueryBuilder';
+import { studentSearchableFields } from './student.constant';
 
 const getStudentByIdFromDB = async (id: string) => {
   const result = await Student.findOne({ id })
@@ -20,59 +22,14 @@ const getStudentByIdFromDB = async (id: string) => {
 };
 
 const getAllStudentsFromDB = async (query: Record<string, unknown>) => {
-  //* Define searchable fields for students
-  const studentSearchableFields = ['email', 'name.firstName', 'presentAddress'];
+ 
 
-  // Destructure the query object to extract specific parameters
-  const { searchTerm, sort, limit, page, fields, ...queryObject } = query;
+  const studentQuery = new QueryBuilder(Student.find(),query).search(studentSearchableFields).filter().sort().paginate().fieldQuery()
 
-  // Define the search term, defaulting to an empty string if not provided
-  const search = searchTerm || '';
+const result = await studentQuery.modelQuery
 
-  // Create the search query to find students based on searchable fields
-  const searchQuery = Student.find({
-    $or: studentSearchableFields.map(field => ({
-      [field]: { $regex: search, $options: 'i' }, // Use regular expressions for case-insensitive search
-    })),
-  });
+return result
 
-  // Apply additional query filters and populate related fields
-  const filter = searchQuery
-    .find(queryObject)
-    .populate('user')
-    .populate('admissionSemester')
-    .populate({
-      path: 'academicDepartment',
-      populate: {
-        path: 'academicFaculty',
-      },
-    });
-
-  // Determine sorting order, defaulting to '-createdAt' if not provided
-  const sorting = (sort as string) || '-createdAt';
-
-  // Apply sorting to the query
-  const sortQuery = filter.sort(sorting);
-
-  // Determine pagination parameters, defaulting to page 1 and no limit if not provided
-  const pageNumber = Number(page as string) || 1;
-  const limitDataCount = Number(limit as string) || 0;
-  const skip = page ? (pageNumber - 1) * limitDataCount : 0;
-
-  // Apply pagination to the query
-  const paginateQuery = sortQuery.skip(skip);
-
-  // Limit the number of results if a limit is specified
-  const limitDataQuery = paginateQuery.limit(limitDataCount);
-
-  // Define the fields to show in the result, defaulting to excluding '__v' if not provided
-  const fieldsToShow = (fields as string).replace(',', ' ') || '-__v';
-
-  // Select only the specified fields in the final query
-  const fieldQuery = await limitDataQuery.select(fieldsToShow);
-
-  // Return the final query result
-  return fieldQuery;
 };
 
 const deleteStudentFromDB = async (id: string) => {
@@ -203,3 +160,60 @@ export const studentServices = {
   deleteStudentFromDB,
   updateStudentInDB,
 };
+
+
+
+//* old code for filtering sorting pagination fields
+
+// const getAllStudentsFromDB = async (query: Record<string, unknown>) => {
+  // Define searchable fields for students
+  // const studentSearchableFields = ['email', 'name.firstName', 'presentAddress'];
+
+  // Destructure the query object to extract specific parameters
+  // const { searchTerm, sort, limit, page, fields, ...queryObject } = query;
+
+  // Define the search term, defaulting to an empty string if not provided
+  // const search = searchTerm || '';
+
+  // Create the search query to find students based on searchable fields
+  // const searchQuery = Student.find({
+  //   $or: studentSearchableFields.map(field => ({
+  //     [field]: { $regex: search, $options: 'i' }, // Use regular expressions for case-insensitive search
+  //   })),
+  // });
+
+  // Apply additional query filters and populate related fields
+  // const filterQuery = searchQuery
+  //   .find(queryObject)
+  //   .populate('user')
+  //   .populate('admissionSemester')
+  //   .populate({
+  //     path: 'academicDepartment',
+  //     populate: {
+  //       path: 'academicFaculty',
+  //     },
+  //   });
+
+  // Determine sorting order, defaulting to '-createdAt' if not provided
+  // const sorting = (sort as string) || '-createdAt';
+
+  // Apply sorting to the query
+  // const sortQuery = filterQuery.sort(sorting);
+
+  // Determine pagination parameters, defaulting to page 1 and no limit if not provided
+  // const pageNumber = Number(page as string) || 1;
+  // const limitDataCount = Number(limit as string) || 0;
+  // const skip = page ? (pageNumber - 1) * limitDataCount : 0;
+
+  // Apply pagination to the query
+  // const paginateQuery = sortQuery.skip(skip).limit(limitDataCount);
+
+  // Define the fields to show in the result, defaulting to excluding '__v' if not provided
+  // const fieldsToShow = fields ? (fields as string).replace(',', ' ') : '-__v';
+
+  // Select only the specified fields in the final query
+  // const fieldQuery = await paginateQuery.select(fieldsToShow);
+
+  // Return the final query result
+  // return fieldQuery;
+// };

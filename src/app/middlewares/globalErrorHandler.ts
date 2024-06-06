@@ -8,6 +8,7 @@ import handleMongooseError from '../errors/handleMongooseValidationError';
 import { handleMongooseCastError } from '../errors/handleMongooseCastError';
 import { handleMongooseDuplicateData } from '../errors/handleMongooseDuplicateDataError';
 import AppError from '../errors/AppError';
+import { handleMongooseFieldError } from '../errors/handleMongooseFieldError';
 
 export const globalErrorHandler: ErrorRequestHandler = (
   err,
@@ -38,9 +39,12 @@ export const globalErrorHandler: ErrorRequestHandler = (
     handleError(handleMongooseError);
   } else if (err?.name === 'CastError') {
     handleError(handleMongooseCastError);
-  } else if (err?.code === 11000){
+  } else if (err?.code === 11000) {
     handleError(handleMongooseDuplicateData);
-  }else if (err instanceof AppError || err instanceof Error) {
+  } else if (err?.code === 31254) {
+    handleError(handleMongooseFieldError);
+  
+  } else if (err instanceof AppError || err instanceof Error) {
     statusCode = err instanceof AppError && err?.statusCode;
     message = err?.message;
     errorSource = [
@@ -51,7 +55,9 @@ export const globalErrorHandler: ErrorRequestHandler = (
     ];
   }
 
-  return res.status(statusCode).json({
+
+
+   return res.status(statusCode).json({
     success: false,
     message: message,
     errorSource,
@@ -149,6 +155,53 @@ stack:
     },
 
 
+     *mongoose field data error
+
+{
+    "err": {
+        "errorResponse": {
+            "ok": 0,
+            "errmsg": "Cannot do exclusion on field age in inclusion projection",
+            "code": 31254,
+            "codeName": "Location31254",
+            "$clusterTime": {
+                "clusterTime": {
+                    "$timestamp": "7377263615495110690"
+                },
+                "signature": {
+                    "hash": "3HXn7LtnOCb6MCEQWVyaY5wn7v8=",
+                    "keyId": {
+                        "low": 15,
+                        "high": 1706645949,
+                        "unsigned": false
+                    }
+                }
+            },
+            "operationTime": {
+                "$timestamp": "7377263615495110690"
+            }
+        },
+        "ok": 0,
+        "code": 31254,
+        "codeName": "Location31254",
+        "$clusterTime": {
+            "clusterTime": {
+                "$timestamp": "7377263615495110690"
+            },
+            "signature": {
+                "hash": "3HXn7LtnOCb6MCEQWVyaY5wn7v8=",
+                "keyId": {
+                    "low": 15,
+                    "high": 1706645949,
+                    "unsigned": false
+                }
+            }
+        },
+        "operationTime": {
+            "$timestamp": "7377263615495110690"
+        }
+    }
+}
 
 
 */
