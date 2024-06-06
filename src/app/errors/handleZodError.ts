@@ -1,5 +1,5 @@
-import { ZodError, ZodIssue } from "zod";
-import { TSimplifiedError } from "../interface/error";
+import { ZodError, ZodIssue } from 'zod';
+import { TSimplifiedError } from '../interfaceSchemaValidation/error';
 
 const handleZodError = (err: ZodError): TSimplifiedError => {
   const errorSource = err.issues.map((issue: ZodIssue) => {
@@ -18,5 +18,4 @@ const handleZodError = (err: ZodError): TSimplifiedError => {
   };
 };
 
-
-export default handleZodError
+export default handleZodError;

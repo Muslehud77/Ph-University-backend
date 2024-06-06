@@ -1,27 +1,9 @@
 import { z } from 'zod';
+import { userNameValidationSchema } from '../../interfaceSchemaValidation/userName';
+import { genderValidationSchema } from '../../interfaceSchemaValidation/gender';
+import { emailValidation } from '../../interfaceSchemaValidation/email';
 
 // Define the validation schema for UserName
-const userNameValidationSchema = z.object({
-  firstName: z
-    .string()
-    .min(5, { message: 'First Name is required' })
-    .trim()
-    .refine(
-      value =>
-        value.charAt(0).toUpperCase() + value.slice(1).toLowerCase() === value,
-      {
-        message: 'First Name must be capitalized',
-      },
-    ),
-  middleName: z.string().trim().optional(),
-  lastName: z
-    .string()
-    .min(5, { message: 'Last Name is required' })
-    .trim()
-    .regex(/^[a-zA-Z]+$/, {
-      message: 'Last Name should only contain alphabetic characters',
-    }),
-});
 
 // Define the validation schema for Guardian
 const guardianValidationSchema = z.object({
@@ -69,17 +51,11 @@ const createStudentValidationSchema = z.object({
     password: z.string().min(5),
     student: z.object({
       name: userNameValidationSchema,
-      gender: z.enum(['male', 'female', 'others'], {
-        message: "The gender field can only be 'male', 'female' or 'other'",
-      }),
+      gender: genderValidationSchema,
       dateOfBirth: z.string().trim().optional(),
-      email: z
-        .string()
-        .min(1, { message: 'Email is required' })
-        .trim()
-        .email({ message: 'Invalid email format' }),
-        admissionSemester:z.string(),
-        academicDepartment:z.string(),
+      email: emailValidation,
+      admissionSemester: z.string(),
+      academicDepartment: z.string(),
       contactNumber: z
         .string()
         .min(1, { message: 'Contact Number is required' })
@@ -109,8 +85,7 @@ const createStudentValidationSchema = z.object({
   }),
 });
 
-
-const updateStudentValidation = createStudentValidationSchema.deepPartial()
+const updateStudentValidation = createStudentValidationSchema.deepPartial();
 
 export const studentValidations = {
   createStudentValidationSchema,

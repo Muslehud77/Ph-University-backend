@@ -1,14 +1,15 @@
 import mongoose from 'mongoose';
-import { TErrorSource, TSimplifiedError } from '../interface/error';
+import {
+  TErrorSource,
+  TSimplifiedError,
+} from '../interfaceSchemaValidation/error';
 
-export const handleMongooseFieldError = (
-  err: any,
-): TSimplifiedError => {
+export const handleMongooseFieldError = (err: any): TSimplifiedError => {
   const message = 'Invalid Field';
 
   const errorSource: TErrorSource = [
     {
-      path: "",
+      path: '',
       message: err?.message,
     },
   ];

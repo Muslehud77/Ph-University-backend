@@ -1,5 +1,8 @@
-import mongoose from "mongoose";
-import { TErrorSource, TSimplifiedError } from "../interface/error";
+import mongoose from 'mongoose';
+import {
+  TErrorSource,
+  TSimplifiedError,
+} from '../interfaceSchemaValidation/error';
 
 const handleMongooseError = (
   err: mongoose.Error.ValidationError,
@@ -30,5 +33,4 @@ const handleMongooseError = (
   };
 };
 
-
-export default handleMongooseError
+export default handleMongooseError;

@@ -1,6 +1,9 @@
 import { ErrorRequestHandler } from 'express';
 import { ZodError } from 'zod';
-import { TErrorHandler, TErrorSource } from '../interface/error';
+import {
+  TErrorHandler,
+  TErrorSource,
+} from '../interfaceSchemaValidation/error';
 import config from '../config';
 import handleZodError from '../errors/handleZodError';
 import { MongooseError } from 'mongoose';
@@ -43,7 +46,6 @@ export const globalErrorHandler: ErrorRequestHandler = (
     handleError(handleMongooseDuplicateData);
   } else if (err?.code === 31254) {
     handleError(handleMongooseFieldError);
-  
   } else if (err instanceof AppError || err instanceof Error) {
     statusCode = err instanceof AppError && err?.statusCode;
     message = err?.message;
@@ -55,9 +57,7 @@ export const globalErrorHandler: ErrorRequestHandler = (
     ];
   }
 
-
-
-   return res.status(statusCode).json({
+  return res.status(statusCode).json({
     success: false,
     message: message,
     errorSource,
@@ -65,18 +65,6 @@ export const globalErrorHandler: ErrorRequestHandler = (
     stack: config.node_env === 'development' ? err?.stack : null,
   });
 };
-
-
-
-
-
-
-
-
-
-
-
-
 
 /*
 

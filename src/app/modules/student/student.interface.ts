@@ -1,4 +1,5 @@
 import { Model, Types } from 'mongoose';
+import { TUserName } from '../../interfaceSchemaValidation/userName';
 
 export type TGuardian = {
   name: string;
@@ -10,18 +11,12 @@ export interface TLocalGuardian extends TGuardian {
   address: string;
 }
 
-export type TUserName = {
-  firstName: string;
-  middleName?: string;
-  lastName: string;
-};
-
 export type TStudent = {
   id: string;
   user: Types.ObjectId;
   name: TUserName;
   gender: 'male' | 'female' | 'others';
-  dateOfBirth?: Date;
+  dateOfBirth?: string;
   email: string;
   admissionSemester: Types.ObjectId;
   academicDepartment: Types.ObjectId;

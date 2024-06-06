@@ -6,10 +6,9 @@ import {
   TGuardian,
   TLocalGuardian,
   TStudent,
-  // StudentMethods,
   StudentModel,
-  TUserName,
 } from './student.interface';
+import { userNameSchema } from '../../interfaceSchemaValidation/userName';
 
 
 // Define a constant for the optional string type
@@ -22,22 +21,7 @@ const nameValidator = (value: string): boolean => {
   return value === capitalizeString;
 };
 
-// Define the schema for the user name
-const userNameSchema = new Schema<TUserName>({
-  firstName: {
-    type: String,
-    required: [true, 'First Name is required'],
-    trim: true,
-   
-  },
-  middleName: stringTypeOptional,
-  lastName: {
-    type: String,
-    required: [true, 'Last Name is required'],
-    trim: true,
 
-  },
-});
 
 // Define the schema for the guardian
 const guardianSchema = new Schema<TGuardian>({
