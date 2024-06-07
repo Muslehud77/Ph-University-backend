@@ -1,13 +1,13 @@
 import httpStatus from 'http-status';
 import catchAsync from '../../utils/catchAsync';
-import { adminServices } from './admin.service';
+import { facultyServices } from './faculty.service';
 import sendResponse from '../../utils/sendResponse';
-import { TAdmin } from './admin.interface';
+import { TFaculty } from './faculty.interface';
 
-const getAllAdmins = catchAsync(async (req, res) => {
+const getAllFaculties = catchAsync(async (req, res) => {
   const query = req.query;
 
-  const result = await adminServices.getAllAdminFromDB(query);
+  const result = await facultyServices.getAllFacultiesFromDB(query);
 
   const data = {
     statusCode: httpStatus.OK,
@@ -19,9 +19,9 @@ const getAllAdmins = catchAsync(async (req, res) => {
   sendResponse(res, data);
 });
 
-const getAdminById = catchAsync(async (req, res) => {
+const getFacultyById = catchAsync(async (req, res) => {
   const id = req.params.id;
-  const result = (await adminServices.getAdminByIdFromDB(id)) as TAdmin;
+  const result = (await facultyServices.getFacultyByIdFromDB(id)) as TFaculty;
   const data = {
     statusCode: httpStatus.OK,
     success: true,
@@ -29,16 +29,16 @@ const getAdminById = catchAsync(async (req, res) => {
     data: result,
   };
 
-  sendResponse<TAdmin>(res, data);
+  sendResponse<TFaculty>(res, data);
 });
 
-const updateAdmin = catchAsync(async (req, res) => {
+const updateFaculty = catchAsync(async (req, res) => {
   const id = req.params.id;
   const studentData = req.body;
-  const result = (await adminServices.updateAdminInDB(
+  const result = (await facultyServices.updateFacultyInDB(
     id,
     studentData,
-  )) as TAdmin;
+  )) as TFaculty;
   const data = {
     statusCode: httpStatus.OK,
     success: true,
@@ -46,26 +46,26 @@ const updateAdmin = catchAsync(async (req, res) => {
     data: result,
   };
 
-  sendResponse<TAdmin>(res, data);
+  sendResponse<TFaculty>(res, data);
 });
 
-const deleteAdmin = catchAsync(async (req, res) => {
+const deleteFaculty = catchAsync(async (req, res) => {
   const id = req.params.id;
 
-  const result = await adminServices.deleteAdminFromDB(id);
+  const result = await facultyServices.deleteFacultyFromDB(id);
   const data = {
     statusCode: httpStatus.OK,
     success: true,
-    message: 'Admin deleted successfully',
+    message: 'Faculty deleted successfully',
     data: result,
   };
 
   sendResponse(res, data);
 });
 
-export const adminController = {
-  getAdminById,
-  getAllAdmins,
-  updateAdmin,
-  deleteAdmin,
+export const facultyController = {
+  getFacultyById,
+  getAllFaculties,
+  updateFaculty,
+  deleteFaculty,
 };
