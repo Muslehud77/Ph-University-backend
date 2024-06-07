@@ -10,3 +10,5 @@ router.get('/:id',courseController.getCourseById)
 router.post('/',validateRequest(courseValidation.createCourseValidation),courseController.createCourse)
 router.patch('/:id',validateRequest(courseValidation.updateCourseValidation),courseController.updateSingleCourse)
 router.delete('/:id',courseController.deleteCourse)
+
+export const courseRoutes =  router
