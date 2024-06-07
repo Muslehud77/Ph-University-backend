@@ -46,16 +46,17 @@ const findLastAdminId = async () => {
 
 export const generateAdminId = async () => {
   const lastAdminId = await findLastAdminId();
- 
+
   let id = '0';
   if (lastAdminId) {
-    const increment = (Number(lastAdminId.substring(1, 5)) + 1)
+    const increment = (Number(lastAdminId.substring(2)) + 1)
       .toString()
       .padStart(4, '0');
-    id = `A${increment}`;
+    id = `A-${increment}`;
   } else {
-    id = `A${(Number(id) + 1).toString().padStart(4, '0')}`;
+    id = `A-${(Number(id) + 1).toString().padStart(4, '0')}`;
   }
+ 
   return id as string;
 };
 
@@ -73,12 +74,12 @@ export const generateFacultyId = async () => {
  
   let id = '0';
   if (lastFacultyId) {
-    const increment = (Number(lastFacultyId.substring(1, 5)) + 1)
+    const increment = (Number(lastFacultyId.substring(2)) + 1)
       .toString()
       .padStart(4, '0');
-    id = `F${increment}`;
+    id = `F-${increment}`;
   } else {
-    id = `F${(Number(id) + 1).toString().padStart(4, '0')}`;
+    id = `F-${(Number(id) + 1).toString().padStart(4, '0')}`;
   }
   return id as string;
 };

@@ -20,7 +20,7 @@ const getAllAdminFromDB = async (query: Record<string, unknown>) => {
 };
 
 const getAdminByIdFromDB = async (id: string) => {
-  const result = await Admin.findOne({ id });
+  const result = await Admin.findById({_id: id });
   return result;
 };
 
@@ -37,7 +37,7 @@ const updateAdminInDB = async (id: string, adminData: Partial<TAdmin>) => {
     }
   }
 
-  const result = await Admin.findOneAndUpdate({ id }, modifiedUpdatedData, {
+  const result = await Admin.findByIdAndUpdate({_id: id }, modifiedUpdatedData, {
     new: true,
   });
   return result;
@@ -45,17 +45,17 @@ const updateAdminInDB = async (id: string, adminData: Partial<TAdmin>) => {
 
 const deleteAdminFromDB = async (id: string) => {
   const session = await mongoose.startSession();
-  const isAdminExist = await Admin.findOne({ id });
+  const isAdminExist = await Admin.findById({_id: id });
 
   if (!isAdminExist) {
-    throw new AppError(404, 'Student not found');
+    throw new AppError(404, 'Admin not found');
   }
 
   try {
     session.startTransaction();
 
-    const deleteAdmin = await Admin.findOneAndUpdate(
-      { id },
+    const deleteAdmin = await Admin.findByIdAndUpdate(
+      {_id: id },
       { isDeleted: true },
       { new: true, session },
     );
@@ -64,8 +64,8 @@ const deleteAdminFromDB = async (id: string) => {
       throw new AppError(httpStatus.BAD_REQUEST, 'Could not delete admin');
     }
 
-    const deleteUser = await userModel.findOneAndUpdate(
-      { id },
+    const deleteUser = await userModel.findByIdAndUpdate(
+      {_id: deleteAdmin?.user },
       { isDeleted: true },
       { new: true, session },
     );

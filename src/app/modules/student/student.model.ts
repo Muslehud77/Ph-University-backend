@@ -175,7 +175,7 @@ studentSchema.virtual('fullName').get(function () {
 // creating a custom static method
 
 studentSchema.statics.isUserExists = async function (id: string) {
-  const existingUser = await Student.findOne({ id });
+  const existingUser = await Student.findById({ _id:id });
   return existingUser;
 };
 

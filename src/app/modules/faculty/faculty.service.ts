@@ -20,7 +20,7 @@ const getAllFacultiesFromDB = async (query: Record<string, unknown>) => {
 };
 
 const getFacultyByIdFromDB = async (id: string) => {
-  const result = await Faculty.findOne({ id });
+  const result = await Faculty.findById({_id: id });
   return result;
 };
 
@@ -41,9 +41,9 @@ const updateFacultyInDB = async (
     }
   }
 
-  console.log(modifiedUpdatedData);
 
-  const result = await Faculty.findOneAndUpdate({ id }, modifiedUpdatedData, {
+
+  const result = await Faculty.findByIdAndUpdate({_id: id }, modifiedUpdatedData, {
     new: true,
   });
   return result;
@@ -51,17 +51,17 @@ const updateFacultyInDB = async (
 
 const deleteFacultyFromDB = async (id: string) => {
   const session = await mongoose.startSession();
-  const isFacultyExist = await Faculty.findOne({ id });
+  const isFacultyExist = await Faculty.findById({_id: id });
 
   if (!isFacultyExist) {
-    throw new AppError(404, 'Student not found');
+    throw new AppError(404, 'Faculty not found');
   }
 
   try {
     session.startTransaction();
 
-    const deleteFaculty = await Faculty.findOneAndUpdate(
-      { id },
+    const deleteFaculty = await Faculty.findByIdAndUpdate(
+      { _id:id },
       { isDeleted: true },
       { new: true, session },
     );
@@ -70,8 +70,8 @@ const deleteFacultyFromDB = async (id: string) => {
       throw new AppError(httpStatus.BAD_REQUEST, 'Could not delete faculty');
     }
 
-    const deleteUser = await userModel.findOneAndUpdate(
-      { id },
+    const deleteUser = await userModel.findByIdAndUpdate(
+      {_id:  deleteFaculty?.user },
       { isDeleted: true },
       { new: true, session },
     );
