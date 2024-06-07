@@ -1,5 +1,6 @@
 import { TAcademicSemester } from '../academicSemester/academicSemester.interface';
 import { Admin } from '../admin/admin.model';
+import { Faculty } from '../faculty/faculty.model';
 
 import { userModel } from './user.model';
 
@@ -54,6 +55,30 @@ export const generateAdminId = async () => {
     id = `A${increment}`;
   } else {
     id = `A${(Number(id) + 1).toString().padStart(4, '0')}`;
+  }
+  return id as string;
+};
+
+
+const findLastFacultyId = async () => {
+  const lastFaculty = (await Faculty.findOne().sort('-createdAt').select('id')) as {
+    [key: string]: string;
+  };
+
+  return lastFaculty?.id ? lastFaculty.id : null;
+};
+
+export const generateFacultyId = async () => {
+  const lastFacultyId = await findLastFacultyId();
+ 
+  let id = '0';
+  if (lastFacultyId) {
+    const increment = (Number(lastFacultyId.substring(1, 5)) + 1)
+      .toString()
+      .padStart(4, '0');
+    id = `F${increment}`;
+  } else {
+    id = `F${(Number(id) + 1).toString().padStart(4, '0')}`;
   }
   return id as string;
 };

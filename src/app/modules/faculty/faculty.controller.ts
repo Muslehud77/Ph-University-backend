@@ -34,15 +34,15 @@ const getFacultyById = catchAsync(async (req, res) => {
 
 const updateFaculty = catchAsync(async (req, res) => {
   const id = req.params.id;
-  const studentData = req.body;
+  const {faculty} = req.body;
   const result = (await facultyServices.updateFacultyInDB(
     id,
-    studentData,
+    faculty,
   )) as TFaculty;
   const data = {
     statusCode: httpStatus.OK,
     success: true,
-    message: 'Query Success',
+    message: 'Faculty updated Successfully',
     data: result,
   };
 

@@ -7,11 +7,13 @@ import { Student } from '../student/student.model';
 import { TUser } from './user.interface';
 
 import { userModel } from './user.model';
-import { generateAdminId, generateStudentId } from './user.utils';
+import { generateAdminId, generateFacultyId, generateStudentId } from './user.utils';
 import AppError from '../../errors/AppError';
 import httpStatus from 'http-status';
 import { TAdmin } from '../admin/admin.interface';
 import { Admin } from '../admin/admin.model';
+import { TFaculty } from '../faculty/faculty.interface';
+import { Faculty } from '../faculty/faculty.model';
 
 const createStudentIntoDB = async (password: string, studentData: TStudent) => {
   // find academic semester info
@@ -97,8 +99,49 @@ const createAdminIntoDB = async (password: string, adminData: TAdmin) => {
     );
   }
 };
+const createFacultyIntoDB = async (password: string, facultyData: TFaculty) => {
+  const session = await mongoose.startSession();
+
+  const userData: Partial<TUser> = {
+    id: await generateFacultyId(),
+    password: password || config.defaultPassword,
+    role: 'faculty',
+  };
+
+  try {
+    session.startTransaction();
+
+    const newUser = await userModel.create([userData], { session });
+
+    if (!newUser) {
+      throw new AppError(httpStatus.BAD_REQUEST, 'Could not create user');
+    }
+
+    facultyData.id = newUser[0]?.id;
+    facultyData.user = newUser[0]?._id;
+
+    const newFaculty = await Faculty.create([facultyData], { session });
+
+    if (!newFaculty) {
+      throw new AppError(httpStatus.BAD_REQUEST, 'Could not create faculty');
+    }
+
+    await session.commitTransaction();
+    await session.endSession();
+
+    return newFaculty;
+  } catch (err: any) {
+    await session.abortTransaction();
+    await session.endSession();
+    throw new AppError(
+      httpStatus.BAD_REQUEST,
+      err.message || 'Could not create faculty',
+    );
+  }
+};
 
 export const userServices = {
   createStudentIntoDB,
   createAdminIntoDB,
+  createFacultyIntoDB,
 };

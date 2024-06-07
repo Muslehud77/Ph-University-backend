@@ -34,10 +34,10 @@ const getAdminById = catchAsync(async (req, res) => {
 
 const updateAdmin = catchAsync(async (req, res) => {
   const id = req.params.id;
-  const studentData = req.body;
+  const {admin} = req.body;
   const result = (await adminServices.updateAdminInDB(
     id,
-    studentData,
+    admin,
   )) as TAdmin;
   const data = {
     statusCode: httpStatus.OK,

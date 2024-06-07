@@ -24,8 +24,28 @@ const getFacultyByIdFromDB = async (id: string) => {
   return result;
 };
 
-const updateFacultyInDB = async (id: string, facultyData: Partial<TFaculty>) => {
-  const result = await Faculty.findOneAndUpdate({ id }, facultyData, { new: true });
+const updateFacultyInDB = async (
+  id: string,
+  facultyData: Partial<TFaculty>,
+) => {
+  const { name, ...remainingFacultyData } = facultyData;
+
+  const modifiedUpdatedData: Record<string, unknown> = {
+    ...remainingFacultyData,
+  };
+
+
+  if (name && Object.keys(name).length) {
+    for (const [key, value] of Object.entries(name)) {
+      modifiedUpdatedData[`name.${key}`] = value;
+    }
+  }
+
+  console.log(modifiedUpdatedData);
+
+  const result = await Faculty.findOneAndUpdate({ id }, modifiedUpdatedData, {
+    new: true,
+  });
   return result;
 };
 

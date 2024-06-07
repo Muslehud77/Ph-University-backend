@@ -1,5 +1,4 @@
 import express from 'express'
-import { adminServices } from './admin.service'
 import validateRequest from '../../middlewares/validateRequest'
 import { adminValidations } from './admin.validation'
 import { adminController } from './admin.controller'
