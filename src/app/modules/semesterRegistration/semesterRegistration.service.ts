@@ -1,6 +1,5 @@
-
-import { TCourseFaculty } from './courseFaculty.interface';
-import { CourseFaculty } from './courseFaculty.model';
+import { TCourseFaculty } from './semesterRegistration.interface';
+import { CourseFaculty } from './semesterRegistration.model';
 
 const createCourseFacultyToDB = async (courseFaculty: TCourseFaculty) => {
   const result = await CourseFaculty.create(courseFaculty);

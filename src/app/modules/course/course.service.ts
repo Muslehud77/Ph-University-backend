@@ -5,7 +5,7 @@ import { TCourse, TPreRequisiteCourses } from './course.interface';
 import { Course, CourseFaculty } from './course.model';
 import AppError from '../../errors/AppError';
 import httpStatus from 'http-status';
-import { TCourseFaculty } from '../courseFaculty/courseFaculty.interface';
+import { TCourseFaculty } from '../semesterRegistration/semesterRegistration.interface';
 
 const createCourseIntoDB = async (courseData: TCourse) => {
   const result = await Course.create(courseData);
@@ -50,114 +50,132 @@ const updateSingleCourseInDB = async (
 
   const session = await mongoose.startSession();
 
+  try {
+    session.startTransaction();
 
-  try{
-session.startTransaction();
+    const updateBasicCourseInfo = await Course.findByIdAndUpdate(
+      { _id: id },
+      courseRemainingData,
+      {
+        new: true,
+        runValidators: true,
+        session,
+      },
+    );
 
-const updateBasicCourseInfo = await Course.findByIdAndUpdate(
-  { _id: id },
-  courseRemainingData,
-  {
-    new: true,
-    runValidators: true,
-    session,
-  },
-);
+    if (!updateBasicCourseInfo) {
+      throw new AppError(
+        httpStatus.BAD_REQUEST,
+        'Could not update the basic course data',
+      );
+    }
 
-if (!updateBasicCourseInfo) {
-  throw new AppError(
-    httpStatus.BAD_REQUEST,
-    'Could not update the basic course data',
+    if (preRequisiteCourses?.length) {
+      // filter the deleted fields
+
+      const deletedPreRequisites = preRequisiteCourses
+        .filter(el => el?.isDeleted)
+        .map(el => el?.course);
+      const newPrerequisites = preRequisiteCourses?.filter(
+        el => !el?.isDeleted,
+      );
+
+      if (deletedPreRequisites?.length) {
+        const deletePreRequisitesCourses = await Course.findByIdAndUpdate(
+          { _id: id },
+          {
+            $pull: {
+              preRequisiteCourses: { course: { $in: deletedPreRequisites } },
+            },
+          },
+          {
+            new: true,
+            runValidators: true,
+            session,
+          },
+        );
+        if (!deletePreRequisitesCourses) {
+          throw new AppError(
+            httpStatus.BAD_REQUEST,
+            'Could not delete Pre Requisite Courses',
+          );
+        }
+      }
+      if (newPrerequisites?.length) {
+        const newPrerequisiteCourses = await Course.findByIdAndUpdate(
+          { _id: id },
+          {
+            $addToSet: { preRequisiteCourses: { $each: newPrerequisites } },
+          },
+          {
+            new: true,
+            runValidators: true,
+            session,
+          },
+        );
+        if (!newPrerequisiteCourses) {
+          throw new AppError(
+            httpStatus.BAD_REQUEST,
+            'Could not add new PreRequisite Courses',
+          );
+        }
+      }
+    }
+
+    const result = await Course.findById({ _id: id }).populate(
+      'preRequisiteCourses.course',
+    );
+
+    await session.commitTransaction();
+    await session.endSession();
+
+    return result;
+  } catch (err: any) {
+    await session.abortTransaction();
+    await session.endSession();
+
+    throw new AppError(
+      httpStatus.BAD_REQUEST,
+      err?.message || 'Could not update course',
+    );
+  }
+};
+
+const assignFacultiesWithCourseIntoDB = async (
+  id: string,
+  assignFaculties: Partial<TCourseFaculty>,
+) => {
+  const result = await CourseFaculty.findByIdAndUpdate(
+    id,
+    {
+      course: id,
+      $addToSet: { faculties: { $each: assignFaculties } },
+    },
+    {
+      upsert: true,
+      new: true,
+    },
   );
-}
 
-if (preRequisiteCourses?.length) {
-  // filter the deleted fields
-
-  const deletedPreRequisites = preRequisiteCourses
-    .filter(el => el?.isDeleted)
-    .map(el => el?.course);
-  const newPrerequisites = preRequisiteCourses?.filter(el => !el?.isDeleted);
-
-  if (deletedPreRequisites?.length) {
-    const deletePreRequisitesCourses = await Course.findByIdAndUpdate(
-      { _id: id },
-      {
-        $pull: {
-          preRequisiteCourses: { course: { $in: deletedPreRequisites } },
-        },
-      },
-      {
-        new: true,
-        runValidators: true,
-        session,
-      },
-    );
-    if (!deletePreRequisitesCourses) {
-      throw new AppError(
-        httpStatus.BAD_REQUEST,
-        'Could not delete Pre Requisite Courses',
-      );
-    }
-  }
-  if (newPrerequisites?.length) {
-    const newPrerequisiteCourses = await Course.findByIdAndUpdate(
-      { _id: id },
-      {
-        $addToSet: { preRequisiteCourses: { $each: newPrerequisites } },
-      },
-      {
-        new: true,
-        runValidators: true,
-        session,
-      },
-    );
-    if (!newPrerequisiteCourses) {
-      throw new AppError(
-        httpStatus.BAD_REQUEST,
-        'Could not add new PreRequisite Courses',
-      );
-    }
-  }
-}
-
-const result = await Course.findById({ _id: id }).populate(
-  'preRequisiteCourses.course',
-);
-
-await session.commitTransaction();
-await session.endSession();
-
-return result;
-  }catch(err:any){
-  await session.abortTransaction()
-  await session.endSession()
-
-  throw new AppError(httpStatus.BAD_REQUEST,err?.message||"Could not update course")
-
-}
-
-
-  
+  return result;
 };
 
+const deleteFacultiesFromCourseFromDB = async (
+  id: string,
+  facultiesToRemove: Partial<TCourseFaculty>,
+) => {
+  const result = await CourseFaculty.findByIdAndUpdate(
+    id,
+    {
+      $pull: { faculties: { $in: facultiesToRemove } },
+    },
+    {
+      new: true,
+    },
+  );
 
-const assignFacultiesWithCourseIntoDB = async (id: string, assignFaculties:Partial<TCourseFaculty>) => {
-
-  
-
-  const result = await CourseFaculty.findByIdAndUpdate(id,{
-    course: id,
-    $addToSet : {faculties:{$each:assignFaculties}}
-  },{
-    upsert:true,
-    new:true
-  })
-
-  return result
-
+  return result;
 };
-
 
 export const courseServices = {
   createCourseIntoDB,
@@ -166,4 +184,5 @@ export const courseServices = {
   deleteSingleCourseFromDB,
   updateSingleCourseInDB,
   assignFacultiesWithCourseIntoDB,
+  deleteFacultiesFromCourseFromDB,
 };
