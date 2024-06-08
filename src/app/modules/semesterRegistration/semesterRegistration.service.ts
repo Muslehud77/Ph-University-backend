@@ -1,37 +1,40 @@
-import { TCourseFaculty } from './semesterRegistration.interface';
-import { CourseFaculty } from './semesterRegistration.model';
+import { TSemesterRegistration } from "./semesterRegistration.interface";
+import { SemesterRegistration } from "./semesterRegistration.model";
 
-const createCourseFacultyToDB = async (courseFaculty: TCourseFaculty) => {
-  const result = await CourseFaculty.create(courseFaculty);
-  return result;
-};
 
-const findCourseFacultyByIdFromDB = async (id: string) => {
-  const result = await CourseFaculty.findById({ _id: id });
-  return result;
-};
-
-const findAllCourseFacultyFromDB = async () => {
-  const result = await CourseFaculty.find();
-  return result;
-};
-
-const updateCourseFacultyInDB = async (
-  id: string,
-  courseFaculty: TCourseFaculty,
+const createSemesterRegistrationToDB = async (
+  semesterRegistration: TSemesterRegistration,
 ) => {
-  const result = await CourseFaculty.findByIdAndUpdate(
+  const result = await SemesterRegistration.create(semesterRegistration);
+  return result;
+};
+
+const findSemesterRegistrationByIdFromDB = async (id: string) => {
+  const result = await SemesterRegistration.findById({ _id: id });
+  return result;
+};
+
+const findAllSemesterRegistrationFromDB = async () => {
+  const result = await SemesterRegistration.find();
+  return result;
+};
+
+const updateSemesterRegistrationInDB = async (
+  id: string,
+  semesterRegistration: TSemesterRegistration,
+) => {
+  const result = await SemesterRegistration.findByIdAndUpdate(
     { _id: id },
-    courseFaculty,
+    semesterRegistration,
     { new: true },
   );
 
   return result;
 };
 
-export const courseFacultyServices = {
-  createCourseFacultyToDB,
-  findCourseFacultyByIdFromDB,
-  findAllCourseFacultyFromDB,
-  updateCourseFacultyInDB,
+export const semesterRegistrationServices = {
+  createSemesterRegistrationToDB,
+  findSemesterRegistrationByIdFromDB,
+  findAllSemesterRegistrationFromDB,
+  updateSemesterRegistrationInDB,
 };
