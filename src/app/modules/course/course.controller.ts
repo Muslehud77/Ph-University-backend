@@ -1,15 +1,9 @@
-// export const courseServices = {
-//   createCourseIntoDB,
-//   getAllCorsesFromDB,
-//   getSingleCourseByIdFromDB,
-//   deleteSingleCourseFromDB,
-//   updateSingleCourseInDB,
-// };
+
 
 import httpStatus from "http-status";
 import catchAsync from "../../utils/catchAsync";
 import sendResponse from "../../utils/sendResponse";
-import { TCourse } from "./course.interface";
+import { TCourse, TCourseFaculty } from "./course.interface";
 import { courseServices } from "./course.service";
 
 
@@ -99,10 +93,32 @@ const updateSingleCourse = catchAsync(async (req, res) => {
 });
 
 
+const assignFaculties = catchAsync(async (req, res) => {
+  const id = req.params.id;
+
+  const {faculties} =  req.body
+
+  const result = (await courseServices.assignFacultiesWithCourseIntoDB(
+    id,
+    faculties,
+  )) as unknown as TCourseFaculty;
+
+  const data = {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Assigned Faculties Successfully',
+    data: result,
+  };
+
+  sendResponse<TCourseFaculty>(res, data);
+});
+
+
 export const courseController = {
-    createCourse,
-    updateSingleCourse,
-    deleteCourse,
-    getAllCorses,
-    getCourseById
-}
+  createCourse,
+  updateSingleCourse,
+  deleteCourse,
+  getAllCorses,
+  getCourseById,
+  assignFaculties,
+};

@@ -20,7 +20,18 @@ const createCourseValidation = z.object({
 
 const updateCourseValidation = createCourseValidation.deepPartial()
 
+
+const createCourseFacultyValidationSchema = z.object({
+  body: z.object({
+    course: z.string().optional(),
+    faculties: z.array(z.string()).optional(),
+  }),
+});
+
+
+
 export const courseValidation = {
-    createCourseValidation,
-    updateCourseValidation
-}
+  createCourseValidation,
+  updateCourseValidation,
+  createCourseFacultyValidationSchema,
+};
