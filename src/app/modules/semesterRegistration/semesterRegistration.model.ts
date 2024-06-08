@@ -6,13 +6,18 @@ const semesterRegistrationSchema = new Schema<TSemesterRegistration>(
     academicSemester: {
       type: Schema.Types.ObjectId,
       required: true,
-      ref: 'Course',
+      unique: true,
+      ref: 'AcademicSemester',
     },
-    status: { enum: ['upcoming', 'ongoing', 'ended'], default: 'upcoming' },
+    status: {
+      type: String,
+      enum: ['UPCOMING', 'ONGOING', 'ENDED'],
+      default: 'UPCOMING',
+    },
     startDate: { type: Date, required: true },
     endDate: { type: Date, required: true },
-    startTime: { type: Date, required: true },
-    endTime: { type: Date, required: true },
+    minCredit: { type: Number, default: 3 },
+    maxCredit: { type: Number, default: 15 },
   },
   {
     timestamps: true,

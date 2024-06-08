@@ -54,7 +54,9 @@ const getSemesterRegistrationById = catchAsync(async (req, res) => {
 });
 
 const getAllSemesterRegistration = catchAsync(async (req, res) => {
-  const result = await semesterRegistrationServices.findAllSemesterRegistrationFromDB();
+  const query = req.query
+  const result =
+    await semesterRegistrationServices.findAllSemesterRegistrationFromDB(query);
 
   const data = {
     statusCode: httpStatus.OK,
