@@ -13,6 +13,7 @@ router.post(
 
 router.get('/', semesterRegistrationControllers.getAllSemesterRegistration);
 router.get('/:id', semesterRegistrationControllers.getSemesterRegistrationById);
+router.delete('/:id', semesterRegistrationControllers.deleteSemesterRegistration);
 router.patch(
   '/:id',
   validateRequest(semesterRegistrationValidation.updateSemesterRegistrationValidationSchema),

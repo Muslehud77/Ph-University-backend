@@ -11,6 +11,19 @@ export type TDays =
   "Friday"|
   "Saturday"
 
+  export type TAssignedSchedules = [
+    {
+      days: TDays[];
+      startTime: string;
+      endTime: string;
+    },
+  ];
+
+  export type TNewSchedules = {
+    days: TDays[];
+    startTime: string;
+    endTime: string;
+  };
 
 export type TOfferedCourse = {
   semesterRegistration: Types.ObjectId;

@@ -8,6 +8,7 @@ const router = express.Router();
 
 router.get('/', offeredCourseController.getAllOfferedCourses);
 router.get('/:id', offeredCourseController.getOfferedCourseById);
+router.delete('/:id', offeredCourseController.deleteSemesterRegistration);
 router.patch(
   '/:id',
   validateRequest(offeredCourseValidations.updateOfferedCourseValidation),
