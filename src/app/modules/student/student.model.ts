@@ -9,6 +9,8 @@ import {
   StudentModel,
 } from './student.interface';
 import { userNameSchema } from '../../interfaceSchemaValidation/userName';
+import AppError from '../../errors/AppError';
+import httpStatus from 'http-status';
 
 
 // Define a constant for the optional string type
@@ -176,8 +178,12 @@ studentSchema.virtual('fullName').get(function () {
 
 studentSchema.statics.isUserExists = async function (id: string) {
   const existingUser = await Student.findById({ _id:id });
+   if (!existingUser) {
+     throw new AppError(httpStatus.NOT_FOUND, 'User does not exists!');
+   }
   return existingUser;
 };
+
 
 
 

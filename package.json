@@ -25,6 +25,7 @@
     "git-filter-repo": "^0.0.30",
     "http-status": "^1.7.4",
     "joi": "^17.13.1",
+    "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.4.0",
     "ts-node-dev": "^2.0.0",
     "validator": "^13.12.0",
