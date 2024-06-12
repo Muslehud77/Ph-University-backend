@@ -20,7 +20,7 @@ const getAllFacultiesFromDB = async (query: Record<string, unknown>) => {
 };
 
 const getFacultyByIdFromDB = async (id: string) => {
-  const result = await Faculty.findById({_id: id });
+  const result = await Faculty.findOne({id: id });
   return result;
 };
 
