@@ -6,6 +6,7 @@ import { authControllers } from './auth.controller';
 const router = express.Router();
 
 router.post('/login',validateRequest(AuthValidation.loginValidationSchema),authControllers.loginUser)
+router.post('/change-password',validateRequest(AuthValidation.),authControllers.loginUser)
 
 
 export const authRoutes = router;

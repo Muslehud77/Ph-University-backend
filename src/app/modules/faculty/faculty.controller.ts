@@ -21,6 +21,7 @@ const getAllFaculties = catchAsync(async (req, res) => {
 
 const getFacultyById = catchAsync(async (req, res) => {
   const id = req.params.id;
+  console.log(req.user);
   const result = (await facultyServices.getFacultyByIdFromDB(id)) as TFaculty;
   const data = {
     statusCode: httpStatus.OK,
