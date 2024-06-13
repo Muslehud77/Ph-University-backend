@@ -7,6 +7,8 @@ import { TFaculty } from './faculty.interface';
 const getAllFaculties = catchAsync(async (req, res) => {
   const query = req.query;
 
+  console.log(req.cookies);
+
   const result = await facultyServices.getAllFacultiesFromDB(query);
 
   const data = {

@@ -1,6 +1,7 @@
 export type TLoginUser = {
-  id: string;
-  password: string;
+  accessToken: string;
+  refreshToken: string;
+  isPasswordNeedsChange : boolean;
 };
 
 export type TChangePassword = {

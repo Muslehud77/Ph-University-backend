@@ -5,6 +5,7 @@ import { TChangePassword, TLoginUser } from './auth.interface';
 import bcrypt from 'bcrypt';
 import jwt, { JwtPayload } from 'jsonwebtoken';
 import config from '../../config';
+import { generateToken } from './auth.utils';
 
 const loginUser = async (loginUserData: TLoginUser) => {
   //check if the user is exist, is user is deleted and is user is blocked
@@ -22,12 +23,26 @@ const loginUser = async (loginUserData: TLoginUser) => {
     id: user.id,
     role: user.role,
   };
-  const accessToken = jwt.sign(jwtPayload, config.jwt_access_secret, {
-    expiresIn: '10d',
-  });
+
+  const accessToken = generateToken(
+    jwtPayload,
+    config.jwt_access_secret,
+    config.jwt_access_expiresIn,
+  );
+
+  const refreshToken = generateToken(
+    jwtPayload,
+    config.jwt_refresh_secret,
+    config.jwt_refresh_expiresIn,
+  );
+   
+
+
+
 
   return {
     accessToken,
+    refreshToken,
     isPasswordNeedsChange: user.isPasswordNeedsChange,
   };
 };
@@ -64,7 +79,12 @@ const changePassword = async (
   return { message: 'password has been changed' };
 };
 
+const refreshTokenService = async ()=>{
+  
+}
+
 export const authServices = {
   loginUser,
   changePassword,
+  refreshTokenService
 };
