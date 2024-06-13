@@ -61,10 +61,7 @@ userSchema.statics.isJWTIssuesBeforePasswordChange = function(passwordChangedTim
   const passwordChangedTime = new Date(passwordChangedTimeStamp).getTime()/1000
 
 
-
   return jwtIssuedTimeStamp < passwordChangedTime;
-
-
 
 }
 

@@ -51,7 +51,7 @@ const refreshToken = catchAsync(async (req, res) => {
   const data = {
     statusCode: httpStatus.OK,
     success: true,
-    message: 'Password Changed Successfully',
+    message: 'Token has been retrieved successfully',
     data: result,
   };
 

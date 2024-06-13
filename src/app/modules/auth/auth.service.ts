@@ -1,13 +1,14 @@
 import httpStatus from 'http-status';
 import AppError from '../../errors/AppError';
 import { userModel } from '../user/user.model';
-import { TChangePassword, TLoginUser } from './auth.interface';
+import { TChangePassword, TLoginData } from './auth.interface';
 import bcrypt from 'bcrypt';
 import jwt, { JwtPayload } from 'jsonwebtoken';
 import config from '../../config';
 import { generateToken } from './auth.utils';
+import { TUser } from '../user/user.interface';
 
-const loginUser = async (loginUserData: TLoginUser) => {
+const loginUser = async (loginUserData: TLoginData) => {
   //check if the user is exist, is user is deleted and is user is blocked
 
   const user = await userModel.isUserHasAccess(loginUserData.id);
@@ -35,10 +36,6 @@ const loginUser = async (loginUserData: TLoginUser) => {
     config.jwt_refresh_secret,
     config.jwt_refresh_expiresIn,
   );
-   
-
-
-
 
   return {
     accessToken,
@@ -79,9 +76,45 @@ const changePassword = async (
   return { message: 'password has been changed' };
 };
 
-const refreshTokenService = async ()=>{
+const refreshTokenService = async (refreshToken: string) => {
+
+  const decoded = jwt.verify(
+    refreshToken,
+    config.jwt_refresh_secret,
+  ) as JwtPayload;
+
+  const { id, iat } = decoded;
+
+  //checking if the user checks all the requirements
+  const user = (await userModel.isUserHasAccess(id)) as TUser;
+
+
+    if (
+      user.passwordChangedAt &&
+      userModel.isJWTIssuesBeforePasswordChange(
+        user?.passwordChangedAt,
+        iat as number,
+      )
+    ) {
+      throw new AppError(httpStatus.UNAUTHORIZED, 'Logout and log back in!');
+    }
   
-}
+    const jwtPayload = {
+      id: user.id,
+      role: user.role,
+    };
+
+    const accessToken = generateToken(
+      jwtPayload,
+      config.jwt_access_secret,
+      config.jwt_access_expiresIn,
+    );
+
+    return {
+      accessToken
+    }
+
+};
 
 export const authServices = {
   loginUser,

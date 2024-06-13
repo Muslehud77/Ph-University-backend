@@ -4,6 +4,11 @@ export type TLoginUser = {
   isPasswordNeedsChange : boolean;
 };
 
+export type TLoginData = {
+  id: string;
+  password: string;
+};
+
 export type TChangePassword = {
   // id: string,
   oldPassword:string,
