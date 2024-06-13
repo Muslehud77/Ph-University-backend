@@ -7,16 +7,23 @@ const router = express.Router();
 
 router.post(
   '/',
-  validateRequest(semesterRegistrationValidation.createSemesterRegistrationValidationSchema),
+  validateRequest(
+    semesterRegistrationValidation.createSemesterRegistrationValidationSchema,
+  ),
   semesterRegistrationControllers.createSemesterRegistration,
 );
 
 router.get('/', semesterRegistrationControllers.getAllSemesterRegistration);
 router.get('/:id', semesterRegistrationControllers.getSemesterRegistrationById);
-router.delete('/:id', semesterRegistrationControllers.deleteSemesterRegistration);
+router.delete(
+  '/:id',
+  semesterRegistrationControllers.deleteSemesterRegistration,
+);
 router.patch(
   '/:id',
-  validateRequest(semesterRegistrationValidation.updateSemesterRegistrationValidationSchema),
+  validateRequest(
+    semesterRegistrationValidation.updateSemesterRegistrationValidationSchema,
+  ),
   semesterRegistrationControllers.updateSemesterRegistrationById,
 );
 

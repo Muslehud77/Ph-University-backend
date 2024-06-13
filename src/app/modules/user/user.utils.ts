@@ -56,13 +56,14 @@ export const generateAdminId = async () => {
   } else {
     id = `A-${(Number(id) + 1).toString().padStart(4, '0')}`;
   }
- 
+
   return id as string;
 };
 
-
 const findLastFacultyId = async () => {
-  const lastFaculty = (await Faculty.findOne().sort('-createdAt').select('id')) as {
+  const lastFaculty = (await Faculty.findOne()
+    .sort('-createdAt')
+    .select('id')) as {
     [key: string]: string;
   };
 
@@ -71,7 +72,7 @@ const findLastFacultyId = async () => {
 
 export const generateFacultyId = async () => {
   const lastFacultyId = await findLastFacultyId();
- 
+
   let id = '0';
   if (lastFacultyId) {
     const increment = (Number(lastFacultyId.substring(2)) + 1)

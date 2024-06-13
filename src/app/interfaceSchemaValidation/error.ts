@@ -3,12 +3,10 @@ export type TErrorSource = {
   message: string;
 }[];
 
-
-
 export type TSimplifiedError = {
   statusCode: number;
   message: string;
-  errorSource: TErrorSource ;
-}
+  errorSource: TErrorSource;
+};
 
 export type TErrorHandler = (err: any) => TSimplifiedError;

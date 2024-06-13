@@ -35,7 +35,7 @@ const getFacultyById = catchAsync(async (req, res) => {
 
 const updateFaculty = catchAsync(async (req, res) => {
   const id = req.params.id;
-  const {faculty} = req.body;
+  const { faculty } = req.body;
   const result = (await facultyServices.updateFacultyInDB(
     id,
     faculty,

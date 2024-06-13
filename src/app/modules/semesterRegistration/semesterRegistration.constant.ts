@@ -1,7 +1,7 @@
-const searchableFields = ['']
+const searchableFields = [''];
 
 export const SemesterRegistrationStatus = {
-    UPCOMING : "UPCOMING",
-    ONGOING : "ONGOING",
-    ENDED : "ENDED"
-} as const
+  UPCOMING: 'UPCOMING',
+  ONGOING: 'ONGOING',
+  ENDED: 'ENDED',
+} as const;

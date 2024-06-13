@@ -24,10 +24,10 @@ const updateSemester = catchAsync(async (req, res) => {
   const id = req.params.id;
   const academicSemesterData = req.body;
 
-  const result = await academicSemesterServices.updateSemesterInDB(
+  const result = (await academicSemesterServices.updateSemesterInDB(
     id,
     academicSemesterData,
-  ) as unknown as TAcademicSemester;
+  )) as unknown as TAcademicSemester;
 
   const data = {
     statusCode: httpStatus.OK,

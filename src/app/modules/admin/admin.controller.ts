@@ -34,11 +34,8 @@ const getAdminById = catchAsync(async (req, res) => {
 
 const updateAdmin = catchAsync(async (req, res) => {
   const id = req.params.id;
-  const {admin} = req.body;
-  const result = (await adminServices.updateAdminInDB(
-    id,
-    admin,
-  )) as TAdmin;
+  const { admin } = req.body;
+  const result = (await adminServices.updateAdminInDB(id, admin)) as TAdmin;
   const data = {
     statusCode: httpStatus.OK,
     success: true,

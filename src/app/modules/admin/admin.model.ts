@@ -1,8 +1,8 @@
-import { Schema, model } from "mongoose";
-import { TAdmin } from "./admin.interface";
-import { userNameSchema } from "../../interfaceSchemaValidation/userName";
+import { Schema, model } from 'mongoose';
+import { TAdmin } from './admin.interface';
+import { userNameSchema } from '../../interfaceSchemaValidation/userName';
 
-import validator from "validator";
+import validator from 'validator';
 
 const adminSchema = new Schema<TAdmin>(
   {
@@ -55,5 +55,4 @@ const adminSchema = new Schema<TAdmin>(
   },
 );
 
-
-export const Admin = model<TAdmin>('Admin',adminSchema)
+export const Admin = model<TAdmin>('Admin', adminSchema);

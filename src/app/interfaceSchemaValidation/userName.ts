@@ -1,5 +1,5 @@
-import { Schema } from "mongoose";
-import { z } from "zod";
+import { Schema } from 'mongoose';
+import { z } from 'zod';
 
 export type TUserName = {
   firstName: string;
@@ -13,17 +13,14 @@ export const userNameSchema = new Schema<TUserName>({
     type: String,
     required: [true, 'First Name is required'],
     trim: true,
-   
   },
-  middleName: {type : String},
+  middleName: { type: String },
   lastName: {
     type: String,
     required: [true, 'Last Name is required'],
     trim: true,
-
   },
 });
-
 
 export const userNameValidationSchema = z.object({
   firstName: z

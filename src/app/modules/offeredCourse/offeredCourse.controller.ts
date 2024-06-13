@@ -23,7 +23,9 @@ const getAllOfferedCourses = catchAsync(async (req, res) => {
 
 const getOfferedCourseById = catchAsync(async (req, res) => {
   const id = req.params.id;
-  const result = (await offeredCourseServices.getOfferedCourseByIdFromDB(id)) as TOfferedCourse;
+  const result = (await offeredCourseServices.getOfferedCourseByIdFromDB(
+    id,
+  )) as TOfferedCourse;
   const data = {
     statusCode: httpStatus.OK,
     success: true,
@@ -37,7 +39,10 @@ const getOfferedCourseById = catchAsync(async (req, res) => {
 const updateOfferedCourse = catchAsync(async (req, res) => {
   const id = req.params.id;
   const offeredCourse = req.body;
-  const result = (await offeredCourseServices.updateOfferedCourseInDB(id, offeredCourse)) as unknown as TOfferedCourse;
+  const result = (await offeredCourseServices.updateOfferedCourseInDB(
+    id,
+    offeredCourse,
+  )) as unknown as TOfferedCourse;
   const data = {
     statusCode: httpStatus.OK,
     success: true,
@@ -63,12 +68,10 @@ const createOfferedCourse = catchAsync(async (req, res) => {
   sendResponse(res, data);
 });
 
-
 const deleteSemesterRegistration = catchAsync(async (req, res) => {
   const id = req.params.id;
-  const result = (await offeredCourseServices.deleteSemesterRegistrationFromDB(
-    id,
-  ))
+  const result =
+    await offeredCourseServices.deleteSemesterRegistrationFromDB(id);
   const data = {
     statusCode: httpStatus.OK,
     success: true,
@@ -78,7 +81,6 @@ const deleteSemesterRegistration = catchAsync(async (req, res) => {
 
   sendResponse(res, data);
 });
-
 
 export const offeredCourseController = {
   getOfferedCourseById,

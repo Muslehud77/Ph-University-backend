@@ -22,7 +22,8 @@ const createFacultyValidationSchema = z.object({
   }),
 });
 
-const updateFacultyValidationSchema = createFacultyValidationSchema.deepPartial();
+const updateFacultyValidationSchema =
+  createFacultyValidationSchema.deepPartial();
 
 export const facultyValidations = {
   createFacultyValidationSchema,

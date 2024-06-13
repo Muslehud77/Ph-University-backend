@@ -20,12 +20,11 @@ export const AcademicMonths: TMonth[] = [
   'December',
 ];
 
-
- export const academicSemesterCodeMapper: TAcademicSemesterCodeMapper = {
-    Autumn: '01',
-    Summer: '02',
-    Fall: '03',
-  };
+export const academicSemesterCodeMapper: TAcademicSemesterCodeMapper = {
+  Autumn: '01',
+  Summer: '02',
+  Fall: '03',
+};
 
 export const AcademicNames: TAcademicSemesterName[] = [
   'Autumn',

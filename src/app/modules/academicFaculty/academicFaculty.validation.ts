@@ -1,7 +1,7 @@
-import { z } from "zod";
+import { z } from 'zod';
 
 export const academicFacultyValidation = z.object({
-    body:z.object({
-        name:z.string()
-    })
-})
+  body: z.object({
+    name: z.string(),
+  }),
+});

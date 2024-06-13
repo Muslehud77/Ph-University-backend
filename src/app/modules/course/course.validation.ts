@@ -1,10 +1,9 @@
 import { z } from 'zod';
 
 const preRequisiteCoursesValidation = z.object({
-    course:z.string(),
-    isDeleted:z.boolean().optional()
-})
-
+  course: z.string(),
+  isDeleted: z.boolean().optional(),
+});
 
 const createCourseValidation = z.object({
   body: z.object({
@@ -17,9 +16,7 @@ const createCourseValidation = z.object({
   }),
 });
 
-
-const updateCourseValidation = createCourseValidation.deepPartial()
-
+const updateCourseValidation = createCourseValidation.deepPartial();
 
 const courseFacultyValidationSchema = z.object({
   body: z.object({
@@ -27,8 +24,6 @@ const courseFacultyValidationSchema = z.object({
     faculties: z.array(z.string()).optional(),
   }),
 });
-
-
 
 export const courseValidation = {
   createCourseValidation,

@@ -1,7 +1,6 @@
 import { Schema, model } from 'mongoose';
 import validator from 'validator';
 
-
 import {
   TGuardian,
   TLocalGuardian,
@@ -12,7 +11,6 @@ import { userNameSchema } from '../../interfaceSchemaValidation/userName';
 import AppError from '../../errors/AppError';
 import httpStatus from 'http-status';
 
-
 // Define a constant for the optional string type
 const stringTypeOptional = { type: String, trim: true };
 
@@ -22,8 +20,6 @@ const nameValidator = (value: string): boolean => {
     toLowercase.charAt(0).toUpperCase() + toLowercase.slice(1);
   return value === capitalizeString;
 };
-
-
 
 // Define the schema for the guardian
 const guardianSchema = new Schema<TGuardian>({
@@ -101,7 +97,7 @@ const studentSchema = new Schema<TStudent, StudentModel>(
       type: String,
       required: [true, 'Gender is required'],
     },
-    dateOfBirth: {type:Date},
+    dateOfBirth: { type: Date },
 
     email: {
       type: String,
@@ -113,8 +109,11 @@ const studentSchema = new Schema<TStudent, StudentModel>(
         message: '{VALUE} is not a valid email',
       },
     },
-    admissionSemester:{type:Schema.Types.ObjectId, ref: 'AcademicSemester'},
-    academicDepartment:{type:Schema.Types.ObjectId, ref: 'AcademicDepartment'},
+    admissionSemester: { type: Schema.Types.ObjectId, ref: 'AcademicSemester' },
+    academicDepartment: {
+      type: Schema.Types.ObjectId,
+      ref: 'AcademicDepartment',
+    },
     contactNumber: {
       type: String,
       required: [true, 'Contact Number is required'],
@@ -154,7 +153,7 @@ const studentSchema = new Schema<TStudent, StudentModel>(
       required: [true, 'Local Guardian Details are required'],
     },
     profileImg: stringTypeOptional,
-   
+
     isDeleted: {
       type: Boolean,
       default: false,
@@ -164,8 +163,8 @@ const studentSchema = new Schema<TStudent, StudentModel>(
     toJSON: {
       virtuals: true,
     },
-    timestamps:true
-  }
+    timestamps: true,
+  },
 );
 
 // mongoose virtuals
@@ -173,24 +172,17 @@ studentSchema.virtual('fullName').get(function () {
   return this?.name?.firstName + this?.name?.middleName + this?.name?.lastName;
 });
 
-
 // creating a custom static method
 
 studentSchema.statics.isUserExists = async function (id: string) {
-  const existingUser = await Student.findById({ _id:id });
-   if (!existingUser) {
-     throw new AppError(httpStatus.NOT_FOUND, 'User does not exists!');
-   }
+  const existingUser = await Student.findById({ _id: id });
+  if (!existingUser) {
+    throw new AppError(httpStatus.NOT_FOUND, 'User does not exists!');
+  }
   return existingUser;
 };
 
-
-
-
-
 //query middleware
-
- 
 
 studentSchema.pre('find', function (next) {
   this.find({ isDeleted: { $ne: true } });
@@ -210,10 +202,10 @@ studentSchema.pre('aggregate', function (next) {
 });
 
 // creating a custom instance method
-studentSchema.methods.isUserExists = async function(id:string){
-  const existingUser = await Student.findOne({id})
-  return existingUser
-}
+studentSchema.methods.isUserExists = async function (id: string) {
+  const existingUser = await Student.findOne({ id });
+  return existingUser;
+};
 
 // Create the student model
 export const Student = model<TStudent, StudentModel>('Student', studentSchema);

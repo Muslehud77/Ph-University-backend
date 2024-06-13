@@ -7,7 +7,11 @@ import { Student } from '../student/student.model';
 import { TUser } from './user.interface';
 
 import { userModel } from './user.model';
-import { generateAdminId, generateFacultyId, generateStudentId } from './user.utils';
+import {
+  generateAdminId,
+  generateFacultyId,
+  generateStudentId,
+} from './user.utils';
 import AppError from '../../errors/AppError';
 import httpStatus from 'http-status';
 import { TAdmin } from '../admin/admin.interface';

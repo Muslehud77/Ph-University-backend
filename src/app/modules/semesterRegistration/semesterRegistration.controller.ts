@@ -7,7 +7,9 @@ import { TSemesterRegistration } from './semesterRegistration.interface';
 const createSemesterRegistration = catchAsync(async (req, res) => {
   const semesterRegistration = req.body;
   const result =
-    await semesterRegistrationServices.createSemesterRegistrationToDB(semesterRegistration);
+    await semesterRegistrationServices.createSemesterRegistrationToDB(
+      semesterRegistration,
+    );
 
   const data = {
     statusCode: httpStatus.OK,
@@ -22,10 +24,11 @@ const createSemesterRegistration = catchAsync(async (req, res) => {
 const updateSemesterRegistrationById = catchAsync(async (req, res) => {
   const semesterRegistrationData = req.body;
   const id = req.params.id;
-  const result = await semesterRegistrationServices.updateSemesterRegistrationInDB(
-    id,
-    semesterRegistrationData,
-  );
+  const result =
+    await semesterRegistrationServices.updateSemesterRegistrationInDB(
+      id,
+      semesterRegistrationData,
+    );
 
   const data = {
     statusCode: httpStatus.OK,
@@ -37,12 +40,9 @@ const updateSemesterRegistrationById = catchAsync(async (req, res) => {
   sendResponse(res, data);
 });
 const deleteSemesterRegistration = catchAsync(async (req, res) => {
-
   const id = req.params.id;
   const result =
-    await semesterRegistrationServices.deleteSemesterRegistrationFromDB(
-      id
-    );
+    await semesterRegistrationServices.deleteSemesterRegistrationFromDB(id);
 
   const data = {
     statusCode: httpStatus.OK,
@@ -56,9 +56,10 @@ const deleteSemesterRegistration = catchAsync(async (req, res) => {
 
 const getSemesterRegistrationById = catchAsync(async (req, res) => {
   const id = req.params.id as string;
-  const result = (await semesterRegistrationServices.findSemesterRegistrationByIdFromDB(
-    id,
-  )) as unknown as TSemesterRegistration;
+  const result =
+    (await semesterRegistrationServices.findSemesterRegistrationByIdFromDB(
+      id,
+    )) as unknown as TSemesterRegistration;
 
   const data = {
     statusCode: httpStatus.OK,
@@ -71,7 +72,7 @@ const getSemesterRegistrationById = catchAsync(async (req, res) => {
 });
 
 const getAllSemesterRegistration = catchAsync(async (req, res) => {
-  const query = req.query
+  const query = req.query;
   const result =
     await semesterRegistrationServices.findAllSemesterRegistrationFromDB(query);
 

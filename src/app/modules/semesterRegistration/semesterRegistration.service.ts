@@ -22,8 +22,6 @@ const createSemesterRegistrationToDB = async (
     ],
   });
 
-  
-
   if (isThereAnyUpcomingOrOngoingSemester.length) {
     throw new AppError(
       httpStatus.BAD_REQUEST,
@@ -128,12 +126,10 @@ const updateSemesterRegistrationInDB = async (
 };
 
 const deleteSemesterRegistrationFromDB = async (id: string) => {
-
-  const session = await mongoose.startSession()
+  const session = await mongoose.startSession();
 
   try {
-
-    session.startTransaction()
+    session.startTransaction();
 
     const isSemesterRegistrationExists = (await SemesterRegistration.findById({
       _id: id,
@@ -154,30 +150,34 @@ const deleteSemesterRegistrationFromDB = async (id: string) => {
     }
 
     const deleteTheOfferedCoursesByThisSemesterRegistration =
-      await OfferedCourse.deleteMany({ semesterRegistration: id },{session});
+      await OfferedCourse.deleteMany({ semesterRegistration: id }, { session });
 
-      if(!deleteTheOfferedCoursesByThisSemesterRegistration){
-        throw new AppError(httpStatus.BAD_REQUEST,"Could not delete the offered courses")
-      }
+    if (!deleteTheOfferedCoursesByThisSemesterRegistration) {
+      throw new AppError(
+        httpStatus.BAD_REQUEST,
+        'Could not delete the offered courses',
+      );
+    }
 
-    const result = await SemesterRegistration.findByIdAndDelete({ _id: id },{session});
+    const result = await SemesterRegistration.findByIdAndDelete(
+      { _id: id },
+      { session },
+    );
 
-    if(!result){
+    if (!result) {
       throw new AppError(
         httpStatus.BAD_REQUEST,
         'Could not delete the Semester Registration',
       );
     }
 
-    await session.commitTransaction()
-    await session.endSession()
+    await session.commitTransaction();
+    await session.endSession();
     return result;
-  } catch (err:any) {
-
-    await session.abortTransaction()
-    await session.endSession()
+  } catch (err: any) {
+    await session.abortTransaction();
+    await session.endSession();
     throw new AppError(httpStatus.BAD_REQUEST, err.message);
-  
   }
 };
 

@@ -34,8 +34,6 @@ const createOfferedCourseIntoDB = async (offeredCourseData: TOfferedCourse) => {
     endTime,
   } = offeredCourseData;
 
- 
-
   //first we need to check if the semester registration is exists
   const isSemesterRegistrationExists = (await SemesterRegistration.findById({
     _id: semesterRegistration,
@@ -99,21 +97,16 @@ const createOfferedCourseIntoDB = async (offeredCourseData: TOfferedCourse) => {
 
   // get the schedules of the faculties
   const assignedSchedules = (await OfferedCourse.find({
-      
-      faculty,
-      days: { $all: days },
-    }).select('days startTime endTime')) as unknown as TAssignedSchedules;
-    console.log(assignedSchedules,"hello");
-
-
+    faculty,
+    days: { $all: days },
+  }).select('days startTime endTime')) as unknown as TAssignedSchedules;
+  console.log(assignedSchedules, 'hello');
 
   const newSchedules = { endTime, startTime } as TNewSchedules;
 
-  const checkConflict = hasConflict(assignedSchedules, newSchedules,"CREATE");
+  const checkConflict = hasConflict(assignedSchedules, newSchedules, 'CREATE');
 
- 
-
-  if(checkConflict) {
+  if (checkConflict) {
     throw new AppError(
       httpStatus.CONFLICT,
       'This faculty is not available at that time! Choose a different Time!',
@@ -148,7 +141,7 @@ const updateOfferedCourseInDB = async (
   id: string,
   offeredCourseData: Partial<TOfferedCourse>,
 ) => {
-  const { faculty, days,section, startTime, endTime } = offeredCourseData;
+  const { faculty, days, section, startTime, endTime } = offeredCourseData;
 
   //first we need to check if the semester offered course is exists
   const isOfferedCourseExists = (await OfferedCourse.findById({
@@ -157,25 +150,20 @@ const updateOfferedCourseInDB = async (
 
   validate(isOfferedCourseExists, 'Offered Course', '');
 
+  const semesterRegistration = isOfferedCourseExists.semesterRegistration;
 
-   const semesterRegistration = isOfferedCourseExists.semesterRegistration;
+  //need to check is the semesterRegistration is upcoming or not
 
-   //need to check is the semesterRegistration is upcoming or not
+  const semesterRegistrationStatus = await SemesterRegistration.findById({
+    _id: semesterRegistration,
+  }).select('status');
 
-
-   const semesterRegistrationStatus = await SemesterRegistration.findById({
-     _id: semesterRegistration,
-   }).select("status");
-
-   if(semesterRegistrationStatus?.status !== "UPCOMING"){
+  if (semesterRegistrationStatus?.status !== 'UPCOMING') {
     throw new AppError(
       httpStatus.BAD_REQUEST,
       `You cannot update this offered course as the semester registration status is ${semesterRegistrationStatus?.status}`,
     );
-   }
-
-
-
+  }
 
   //we need to check if the faculty is exists
   const isFacultyExists = (await Faculty.findById({
@@ -183,8 +171,6 @@ const updateOfferedCourseInDB = async (
   })) as TFaculty;
 
   validate(isFacultyExists, 'Faculty', '');
-
-
 
   // get the schedules of the faculties
   const assignedSchedules = (await OfferedCourse.find({
@@ -195,7 +181,7 @@ const updateOfferedCourseInDB = async (
 
   const newSchedules = { endTime, startTime } as TNewSchedules;
 
-  const checkConflict = hasConflict(assignedSchedules, newSchedules,"UPDATE");
+  const checkConflict = hasConflict(assignedSchedules, newSchedules, 'UPDATE');
 
   if (checkConflict) {
     throw new AppError(
@@ -203,8 +189,6 @@ const updateOfferedCourseInDB = async (
       'This faculty is not available at that time! Choose a different Time!',
     );
   }
-
-  
 
   const result = await OfferedCourse.findByIdAndUpdate(
     { _id: id },
@@ -216,41 +200,35 @@ const updateOfferedCourseInDB = async (
   return result;
 };
 
+const deleteSemesterRegistrationFromDB = async (id: string) => {
+  // check if the semester registration exist
+  const isOfferedCourseExists = await OfferedCourse.findById({ _id: id });
 
-const deleteSemesterRegistrationFromDB = async (id:string)=>{
+  if (!isOfferedCourseExists) {
+    throw new AppError(
+      httpStatus.NOT_FOUND,
+      'This offered course does not exists!',
+    );
+  }
 
-    // check if the semester registration exist 
-    const isOfferedCourseExists = await OfferedCourse.findById({_id:id})
+  const semesterRegistration = isOfferedCourseExists.semesterRegistration;
 
-    if(!isOfferedCourseExists){
-        throw new AppError(
-          httpStatus.NOT_FOUND,
-          'This offered course does not exists!',
-        );
-    }
+  //need to check is the semesterRegistration is upcoming or not
 
-      const semesterRegistration = isOfferedCourseExists.semesterRegistration;
+  const semesterRegistrationStatus = await SemesterRegistration.findById({
+    _id: semesterRegistration,
+  }).select('status');
 
-      //need to check is the semesterRegistration is upcoming or not
+  if (semesterRegistrationStatus?.status !== 'UPCOMING') {
+    throw new AppError(
+      httpStatus.BAD_REQUEST,
+      `You cannot delete this offered course as the semester registration status is ${semesterRegistrationStatus?.status}`,
+    );
+  }
 
-      const semesterRegistrationStatus = await SemesterRegistration.findById({
-        _id: semesterRegistration,
-      }).select('status');
-
-      if (semesterRegistrationStatus?.status !== 'UPCOMING') {
-        throw new AppError(
-          httpStatus.BAD_REQUEST,
-          `You cannot delete this offered course as the semester registration status is ${semesterRegistrationStatus?.status}`,
-        );
-      }
-    
-      
-
-
-
-    const result = await OfferedCourse.findByIdAndDelete({_id:id})
-    return result 
-}
+  const result = await OfferedCourse.findByIdAndDelete({ _id: id });
+  return result;
+};
 
 export const offeredCourseServices = {
   getAllOfferedCourseFromDB,

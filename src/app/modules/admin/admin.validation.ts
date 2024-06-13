@@ -24,8 +24,6 @@ const createAdminValidationSchema = z.object({
 const updateAdminValidationSchema = createAdminValidationSchema.deepPartial();
 
 export const adminValidations = {
-    createAdminValidationSchema,
-    updateAdminValidationSchema 
-}
-
-
+  createAdminValidationSchema,
+  updateAdminValidationSchema,
+};

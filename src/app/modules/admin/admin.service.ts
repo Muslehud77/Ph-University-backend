@@ -20,7 +20,7 @@ const getAllAdminFromDB = async (query: Record<string, unknown>) => {
 };
 
 const getAdminByIdFromDB = async (id: string) => {
-  const result = await Admin.findById({_id: id });
+  const result = await Admin.findById({ _id: id });
   return result;
 };
 
@@ -37,15 +37,19 @@ const updateAdminInDB = async (id: string, adminData: Partial<TAdmin>) => {
     }
   }
 
-  const result = await Admin.findByIdAndUpdate({_id: id }, modifiedUpdatedData, {
-    new: true,
-  });
+  const result = await Admin.findByIdAndUpdate(
+    { _id: id },
+    modifiedUpdatedData,
+    {
+      new: true,
+    },
+  );
   return result;
 };
 
 const deleteAdminFromDB = async (id: string) => {
   const session = await mongoose.startSession();
-  const isAdminExist = await Admin.findById({_id: id });
+  const isAdminExist = await Admin.findById({ _id: id });
 
   if (!isAdminExist) {
     throw new AppError(404, 'Admin not found');
@@ -55,7 +59,7 @@ const deleteAdminFromDB = async (id: string) => {
     session.startTransaction();
 
     const deleteAdmin = await Admin.findByIdAndUpdate(
-      {_id: id },
+      { _id: id },
       { isDeleted: true },
       { new: true, session },
     );
@@ -65,7 +69,7 @@ const deleteAdminFromDB = async (id: string) => {
     }
 
     const deleteUser = await userModel.findByIdAndUpdate(
-      {_id: deleteAdmin?.user },
+      { _id: deleteAdmin?.user },
       { isDeleted: true },
       { new: true, session },
     );

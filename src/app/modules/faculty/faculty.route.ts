@@ -7,7 +7,7 @@ import Auth from '../../middlewares/auth';
 const router = express.Router();
 
 router.get('/', facultyController.getAllFaculties);
-router.get('/:id',Auth(), facultyController.getFacultyById);
+router.get('/:id', Auth(), facultyController.getFacultyById);
 router.patch(
   '/:id',
   validateRequest(facultyValidations.updateFacultyValidationSchema),

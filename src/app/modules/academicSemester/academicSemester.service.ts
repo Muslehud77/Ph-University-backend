@@ -37,7 +37,7 @@ const updateSemesterInDB = async (
     semesterData,
     { new: true },
   );
-  
+
   return result;
 };
 

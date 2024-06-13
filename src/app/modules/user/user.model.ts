@@ -1,16 +1,16 @@
-import { Schema, model } from "mongoose";
-import { TUser, UserModel } from "./user.interface";
+import { Schema, model } from 'mongoose';
+import { TUser, UserModel } from './user.interface';
 import bcrypt from 'bcrypt';
-import config from "../../config";
-import AppError from "../../errors/AppError";
-import httpStatus from "http-status";
+import config from '../../config';
+import AppError from '../../errors/AppError';
+import httpStatus from 'http-status';
 
-const requiredString = {type:String,required:true} 
+const requiredString = { type: String, required: true };
 
 const userSchema = new Schema<TUser, UserModel>(
   {
     id: { ...requiredString, unique: true },
-    password: {...requiredString,select:0},
+    password: { ...requiredString, select: 0 },
     isPasswordNeedsChange: { type: Boolean, default: true },
     role: {
       type: String,
@@ -29,23 +29,17 @@ const userSchema = new Schema<TUser, UserModel>(
   },
 );
 
+userSchema.statics.isUserExistsByCustomId = async function (id: string) {
+  const isUserExistsByCustomId = await userModel.findOne({ id }).select("+password");
+  if (!isUserExistsByCustomId) {
+    throw new AppError(httpStatus.NOT_FOUND, 'User does not exists!');
+  }
 
-
-userSchema.statics.isUserExistsByCustomId = async function(id:string){
-  const isUserExistsByCustomId = await userModel.findOne({id})
-   if (!isUserExistsByCustomId) {
-     throw new AppError(httpStatus.NOT_FOUND, 'User does not exists!');
-   }
-
-  return isUserExistsByCustomId
+  return isUserExistsByCustomId;
 };
 
-
 userSchema.statics.isUserHasAccess = async function (id: string) {
-
-  
-
-  const isUserHasAccess = await userModel.findOne({ id });
+  const isUserHasAccess = await userModel.findOne({ id }).select("+password");
   if (!isUserHasAccess) {
     throw new AppError(httpStatus.NOT_FOUND, 'User does not exists!');
   }
@@ -63,24 +57,28 @@ userSchema.statics.isUserHasAccess = async function (id: string) {
   return isUserHasAccess;
 };
 
-
-userSchema.statics.isPasswordMatched = async function(plainTextPassword:string,hashedPassword:string){
-   const isPasswordMatched = await bcrypt.compare(
-     plainTextPassword,
-     hashedPassword,
-   );
-   if (!isPasswordMatched) {
-     throw new AppError(httpStatus.FORBIDDEN, 'Wrong Password!');
-   }
-   return isPasswordMatched
-}
-
+userSchema.statics.isPasswordMatched = async function (
+  plainTextPassword: string,
+  hashedPassword: string,
+) {
+  const isPasswordMatched = await bcrypt.compare(
+    plainTextPassword,
+    hashedPassword,
+  );
+  if (!isPasswordMatched) {
+    throw new AppError(httpStatus.FORBIDDEN, 'Wrong Password!');
+  }
+  return isPasswordMatched;
+};
 
 //pre save middleware/hook : will work on create() save() method
 userSchema.pre('save', async function () {
   //hashing password and save into DB
   const user = this as TUser;
-  const encryptedPassword = await bcrypt.hash(user.password, config.hashSaltRounds);
+  const encryptedPassword = await bcrypt.hash(
+    user.password,
+    config.hashSaltRounds,
+  );
 
   user.password = encryptedPassword;
 });
@@ -93,6 +91,5 @@ userSchema.post('save', function (doc, next) {
 
   next();
 });
-
 
 export const userModel = model<TUser, UserModel>('User', userSchema);
