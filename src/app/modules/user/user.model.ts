@@ -12,6 +12,7 @@ const userSchema = new Schema<TUser, UserModel>(
     id: { ...requiredString, unique: true },
     password: { ...requiredString, select: 0 },
     isPasswordNeedsChange: { type: Boolean, default: true },
+    passwordChangedAt:{type:Date},
     role: {
       type: String,
       enum: { values: ['student', 'admin', 'faculty'] },
@@ -19,7 +20,7 @@ const userSchema = new Schema<TUser, UserModel>(
     },
     status: {
       type: String,
-      enum: { values: ['in-progress', 'blocked', 'faculty'] },
+      enum: { values: ['in-progress', 'blocked'] },
       default: 'in-progress',
     },
     isDeleted: { type: Boolean, default: false },
@@ -39,23 +40,33 @@ userSchema.statics.isUserExistsByCustomId = async function (id: string) {
 };
 
 userSchema.statics.isUserHasAccess = async function (id: string) {
-  const isUserHasAccess = await userModel.findOne({ id }).select("+password");
-  if (!isUserHasAccess) {
-    throw new AppError(httpStatus.NOT_FOUND, 'User does not exists!');
-  }
-
+ 
+  const user = await userModel.isUserExistsByCustomId(id);
+  
   //check if the user is deleted
-  if (isUserHasAccess.isDeleted !== false) {
-    throw new AppError(httpStatus.FORBIDDEN, 'User is deleted!');
+  if (user.isDeleted !== false) {
+    throw new AppError(httpStatus.FORBIDDEN, 'This is a deleted user!');
   }
 
   //check if the user is blocked
-  if (isUserHasAccess.status === 'blocked') {
-    throw new AppError(httpStatus.FORBIDDEN, 'User is blocked!');
+  if (user.status === 'blocked') {
+    throw new AppError(httpStatus.FORBIDDEN, 'This user is blocked!');
   }
 
-  return isUserHasAccess;
+  return user;
 };
+
+userSchema.statics.isJWTIssuesBeforePasswordChange = function(passwordChangedTimeStamp,jwtIssuedTimeStamp){
+
+  const passwordChangedTime = new Date(passwordChangedTimeStamp).getTime()/1000
+
+
+
+  return jwtIssuedTimeStamp < passwordChangedTime;
+
+
+
+}
 
 userSchema.statics.isPasswordMatched = async function (
   plainTextPassword: string,

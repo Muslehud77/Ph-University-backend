@@ -3,6 +3,7 @@ import sendResponse from '../../utils/sendResponse';
 import { TLoginUser } from './auth.interface';
 import catchAsync from '../../utils/catchAsync';
 import { authServices } from './auth.service';
+import { JwtPayload } from 'jsonwebtoken';
 
 const loginUser = catchAsync(async (req, res) => {
   const result = (await authServices.loginUser(

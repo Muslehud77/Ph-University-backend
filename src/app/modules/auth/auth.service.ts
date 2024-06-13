@@ -32,11 +32,14 @@ const loginUser = async (loginUserData: TLoginUser) => {
   };
 };
 
-const changePassword = async (userPasswordData:TChangePassword,userData : {id:string,role:string})=>{
+const changePassword = async (
+  userPasswordData: TChangePassword,
+  userData: JwtPayload,
+) => {
   //check if the user is exist, is user is deleted and is user is blocked
   const user = await userModel.isUserHasAccess(userData.id);
 
-  //checking if the current password is matching with the old password 
+  //checking if the current password is matching with the old password
   await userModel.isPasswordMatched(
     userPasswordData.oldPassword,
     user.password,
@@ -49,15 +52,17 @@ const changePassword = async (userPasswordData:TChangePassword,userData : {id:st
   );
 
   //change the password
-  const result = await userModel.findOneAndUpdate(
+  await userModel.findOneAndUpdate(
     { id: user.id, role: user.role },
-    { password: newEncryptedPassword },
+    {
+      password: newEncryptedPassword,
+      isPasswordNeedsChange: false,
+      passwordChangedAt : new Date(),
+    },
   );
 
-  return result;
-  
-}
-
+  return { message: 'password has been changed' };
+};
 
 export const authServices = {
   loginUser,
