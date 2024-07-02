@@ -11,7 +11,7 @@ export const handleMongooseDuplicateData = (err: any): TSimplifiedError => {
     err?.errorResponse?.errmsg?.match(pathRegex) ||
     err?.message?.match(pathRegex);
 
-  console.log(match);
+ 
 
   const errorSource: TErrorSource = [
     {

@@ -10,6 +10,8 @@ const requiredString = { type: String, required: true };
 const userSchema = new Schema<TUser, UserModel>(
   {
     id: { ...requiredString, unique: true },
+    email: { ...requiredString, unique: true },
+
     password: { ...requiredString, select: 0 },
     isPasswordNeedsChange: { type: Boolean, default: true },
     passwordChangedAt:{type:Date},

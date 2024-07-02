@@ -8,6 +8,7 @@ import config from '../../config';
 import { generateToken } from './auth.utils';
 import { TUser } from '../user/user.interface';
 
+
 const loginUser = async (loginUserData: TLoginData) => {
   //check if the user is exist, is user is deleted and is user is blocked
 
@@ -116,8 +117,36 @@ const refreshTokenService = async (refreshToken: string) => {
 
 };
 
+const forgotPassword = async (userId:string) => {
+
+  const user = await userModel.isUserHasAccess(userId)
+
+  if(!user){
+    throw new AppError(httpStatus.UNAUTHORIZED,"User does not exists!")
+  }
+
+  const jwtPayload = {
+      id: user.id,
+      role: user.role,
+    };
+
+    const resetToken = generateToken(
+      jwtPayload,
+      config.jwt_access_secret,
+      '10m',
+    );
+
+  const resetUILink = `http://localhost:3000?id=${user.id}&token=${resetToken}`;
+
+  
+
+  return 
+  
+};
+
 export const authServices = {
   loginUser,
   changePassword,
-  refreshTokenService
+  refreshTokenService,
+  forgotPassword,
 };
