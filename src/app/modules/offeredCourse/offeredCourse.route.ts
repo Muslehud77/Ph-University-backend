@@ -6,7 +6,7 @@ import { offeredCourseValidations } from './offeredCourse.validation';
 
 const router = express.Router();
 
-router.get('/', Auth(),offeredCourseController.getAllOfferedCourses);
+router.get('/',offeredCourseController.getAllOfferedCourses);
 router.get('/:id', offeredCourseController.getOfferedCourseById);
 router.delete('/:id', offeredCourseController.deleteSemesterRegistration);
 router.patch(

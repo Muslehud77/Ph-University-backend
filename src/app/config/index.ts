@@ -12,6 +12,11 @@ const jwt_access_secret = process.env.JWT_ACCESS_SECRET as string;
 const jwt_refresh_secret = process.env.JWT_REFRESH_SECRET as string;
 const jwt_access_expiresIn = process.env.JWT_ACCESS_EXPIRES_IN as string;
 const jwt_refresh_expiresIn = process.env.JWT_REFRESH_EXPIRES_IN as string; 
+
+const NODE_MAILER_EMAIL = process.env.NODE_MAILER_EMAIL;
+const NODE_MAILER_PASSWORD = process.env.NODE_MAILER_PASSWORD;
+const RESET_PASSWORD_UI_LINK = process.env.RESET_PASSWORD_UI_LINK;
+
 export default {
   dbUri,
   port,
@@ -22,4 +27,7 @@ export default {
   jwt_refresh_secret,
   jwt_access_expiresIn,
   jwt_refresh_expiresIn,
+  NODE_MAILER_EMAIL,
+  NODE_MAILER_PASSWORD,
+  RESET_PASSWORD_UI_LINK,
 };

@@ -7,6 +7,7 @@ import jwt, { JwtPayload } from 'jsonwebtoken';
 import config from '../../config';
 import { generateToken } from './auth.utils';
 import { TUser } from '../user/user.interface';
+import { sendEmail } from '../../utils/sendEmail';
 
 
 const loginUser = async (loginUserData: TLoginData) => {
@@ -136,17 +137,31 @@ const forgotPassword = async (userId:string) => {
       '10m',
     );
 
-  const resetUILink = `http://localhost:3000?id=${user.id}&token=${resetToken}`;
+  const resetUILink = `${config.RESET_PASSWORD_UI_LINK}?id=${user.id}&token=${resetToken}`;
 
-  
+  sendEmail(user.email,resetUILink)
 
   return 
   
 };
+
+const resetPassword = async (token:string,userData:{id:string,newPassword:string})=>{
+
+  const user = await userModel.isUserHasAccess(userData.id)
+  const {id} = jwt.verify(token, config.jwt_access_secret) as JwtPayload;
+
+  if(user.id !== id){
+    throw new AppError(httpStatus.UNAUTHORIZED,"You don't have authorization!")
+  }
+
+
+  
+}
 
 export const authServices = {
   loginUser,
   changePassword,
   refreshTokenService,
   forgotPassword,
+  resetPassword,
 };
