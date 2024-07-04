@@ -1,5 +1,3 @@
-
-
 import { userServices } from './user.service';
 import sendResponse from '../../utils/sendResponse';
 import { TStudent } from '../student/student.interface';
@@ -7,8 +5,9 @@ import httpStatus from 'http-status';
 import catchAsync from '../../utils/catchAsync';
 import { TAdmin } from '../admin/admin.interface';
 import { TFaculty } from '../faculty/faculty.interface';
+import { TUser } from './user.interface';
 
-const createStudent = catchAsync(async (req, res, next) => {
+const createStudent = catchAsync(async (req, res) => {
   const { password, student } = req.body;
 
   // will call service func to send this data
@@ -27,7 +26,7 @@ const createStudent = catchAsync(async (req, res, next) => {
   sendResponse<TStudent>(res, data);
 });
 
-const createAdmin = catchAsync(async (req, res, next) => {
+const createAdmin = catchAsync(async (req, res) => {
   const { password, admin } = req.body;
 
   // will call service func to send this data
@@ -46,8 +45,7 @@ const createAdmin = catchAsync(async (req, res, next) => {
   sendResponse<TAdmin>(res, data);
 });
 
-
-const createFaculty = catchAsync(async (req, res, next) => {
+const createFaculty = catchAsync(async (req, res) => {
   const { password, faculty } = req.body;
 
   // will call service func to send this data
@@ -66,14 +64,13 @@ const createFaculty = catchAsync(async (req, res, next) => {
   sendResponse<TFaculty>(res, data);
 });
 
-
-const getMe = catchAsync(async (req, res, next) => {
-
-  const {id,role} = req.user
-
+const getMe = catchAsync(async (req, res) => {
+  const { id, role } = req.user;
 
   // will call service func to send this data
-  const result = (await userServices.getMe(id,role)) as Partial<TAdmin|TStudent|TFaculty>;
+  const result = (await userServices.getMe(id, role)) as Partial<
+    TAdmin | TStudent | TFaculty
+  >;
   // send response
 
   const data = {
@@ -85,4 +82,27 @@ const getMe = catchAsync(async (req, res, next) => {
   sendResponse<Partial<TAdmin | TStudent | TFaculty>>(res, data);
 });
 
-export const userController = { createStudent, createAdmin, createFaculty, getMe };
+const changeStatus = catchAsync(async (req, res) => {
+  const id = req.params.id;
+  const status = req.body;
+
+  // will call service func to send this data
+  const result = (await userServices.changeStatus(id, status)) as TUser;
+  // send response
+
+  const data = {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Changed the status successfully!',
+    data: result,
+  };
+  sendResponse<TUser>(res, data);
+});
+
+export const userController = {
+  createStudent,
+  createAdmin,
+  createFaculty,
+  getMe,
+  changeStatus,
+};

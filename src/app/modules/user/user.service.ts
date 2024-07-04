@@ -18,7 +18,7 @@ import { TAdmin } from '../admin/admin.interface';
 import { Admin } from '../admin/admin.model';
 import { TFaculty } from '../faculty/faculty.interface';
 import { Faculty } from '../faculty/faculty.model';
-import jwt, { JwtPayload } from 'jsonwebtoken';
+
 
 const createStudentIntoDB = async (password: string, studentData: TStudent) => {
   // find academic semester info
@@ -148,7 +148,7 @@ const createFacultyIntoDB = async (password: string, facultyData: TFaculty) => {
   }
 };
 
-const getMe = async (id,role) => {
+const getMe = async (id:string,role:string) => {
   
   const user = await userModel.isUserHasAccess(id);
 
@@ -163,9 +163,15 @@ const getMe = async (id,role) => {
   }
 };
 
+const changeStatus = async (id:string,status:{status:string})=>{
+  const result = await userModel.findByIdAndUpdate({_id:id},status,{new:true})
+  return result
+}
+
 export const userServices = {
   createStudentIntoDB,
   createAdminIntoDB,
   createFacultyIntoDB,
   getMe,
+  changeStatus,
 };
