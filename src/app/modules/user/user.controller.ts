@@ -1,4 +1,4 @@
-import { RequestHandler } from 'express';
+
 
 import { userServices } from './user.service';
 import sendResponse from '../../utils/sendResponse';
@@ -45,6 +45,8 @@ const createAdmin = catchAsync(async (req, res, next) => {
   };
   sendResponse<TAdmin>(res, data);
 });
+
+
 const createFaculty = catchAsync(async (req, res, next) => {
   const { password, faculty } = req.body;
 
@@ -64,4 +66,23 @@ const createFaculty = catchAsync(async (req, res, next) => {
   sendResponse<TFaculty>(res, data);
 });
 
-export const userController = { createStudent, createAdmin, createFaculty };
+
+const getMe = catchAsync(async (req, res, next) => {
+
+  const {id,role} = req.user
+
+
+  // will call service func to send this data
+  const result = (await userServices.getMe(id,role)) as Partial<TAdmin|TStudent|TFaculty>;
+  // send response
+
+  const data = {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Got the user successfully!',
+    data: result,
+  };
+  sendResponse<Partial<TAdmin | TStudent | TFaculty>>(res, data);
+});
+
+export const userController = { createStudent, createAdmin, createFaculty, getMe };

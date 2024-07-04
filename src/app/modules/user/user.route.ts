@@ -28,5 +28,11 @@ router.post(
   validateRequest(adminValidations.createAdminValidationSchema),
   userController.createAdmin,
 );
+router.get(
+  '/me',
+  Auth('student','faculty','admin'),
+ 
+  userController.getMe,
+);
 
 export const userRoutes = router;

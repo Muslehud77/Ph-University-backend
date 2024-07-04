@@ -19,8 +19,8 @@ export const globalErrorHandler: ErrorRequestHandler = (
   res,
   next,
 ) => {
-  let statusCode = err.statusCode || 500;
-  let message = err.message || 'Something went wrong';
+  let statusCode = err?.statusCode || 500;
+  let message = err?.message || 'Something went wrong';
 
   let errorSource: TErrorSource = [
     {
@@ -30,8 +30,9 @@ export const globalErrorHandler: ErrorRequestHandler = (
   ];
 
   const handleError = (errorHandler: TErrorHandler) => {
+   
     const simplifiedError = errorHandler(err);
-    statusCode = simplifiedError?.statusCode;
+    statusCode = simplifiedError?.statusCode || 500;
     message = simplifiedError?.message;
     errorSource = simplifiedError?.errorSource;
   };
@@ -47,7 +48,7 @@ export const globalErrorHandler: ErrorRequestHandler = (
   } else if (err?.code === 31254) {
     handleError(handleMongooseFieldError);
   } else if (err instanceof AppError || err instanceof Error) {
-    statusCode = err instanceof AppError && err?.statusCode;
+    statusCode = err instanceof AppError && err?.statusCode || 500;
     message = err?.message;
     errorSource = [
       {
@@ -57,8 +58,9 @@ export const globalErrorHandler: ErrorRequestHandler = (
     ];
   }
 
-  console.log(err.message);
 
+console.log(err.message);
+  
   return res.status(statusCode).json({
     success: false,
     message: message,

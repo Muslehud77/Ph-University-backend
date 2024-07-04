@@ -18,6 +18,7 @@ import { TAdmin } from '../admin/admin.interface';
 import { Admin } from '../admin/admin.model';
 import { TFaculty } from '../faculty/faculty.interface';
 import { Faculty } from '../faculty/faculty.model';
+import jwt, { JwtPayload } from 'jsonwebtoken';
 
 const createStudentIntoDB = async (password: string, studentData: TStudent) => {
   // find academic semester info
@@ -111,7 +112,7 @@ const createFacultyIntoDB = async (password: string, facultyData: TFaculty) => {
   const userData: Partial<TUser> = {
     id: await generateFacultyId(),
     password: password || config.defaultPassword,
-    email:facultyData.email,
+    email: facultyData.email,
     role: 'faculty',
   };
 
@@ -147,8 +148,24 @@ const createFacultyIntoDB = async (password: string, facultyData: TFaculty) => {
   }
 };
 
+const getMe = async (id,role) => {
+  
+  const user = await userModel.isUserHasAccess(id);
+
+  if (role === 'student') {
+    return await Student.findOne({ id: user?.id }).populate('user');
+  } else if (role === 'admin') {
+    return await Admin.findOne({ id: user?.id }).populate('user');
+  } else if (role === 'faculty') {
+    return await Faculty.findOne({ id: user?.id }).populate('user');
+  } else {
+    throw new AppError(404, 'Could not find the user!');
+  }
+};
+
 export const userServices = {
   createStudentIntoDB,
   createAdminIntoDB,
   createFacultyIntoDB,
+  getMe,
 };

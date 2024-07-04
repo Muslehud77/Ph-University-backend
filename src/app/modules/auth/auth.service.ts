@@ -146,16 +146,33 @@ const forgotPassword = async (userId:string) => {
 };
 
 const resetPassword = async (token:string,userData:{id:string,newPassword:string})=>{
+  const user = await userModel.isUserHasAccess(userData.id);
+  const { id } = jwt.verify(token, config.jwt_access_secret) as JwtPayload;
 
-  const user = await userModel.isUserHasAccess(userData.id)
-  const {id} = jwt.verify(token, config.jwt_access_secret) as JwtPayload;
 
-  if(user.id !== id){
-    throw new AppError(httpStatus.UNAUTHORIZED,"You don't have authorization!")
+  if (user.id !== id) {
+
+    throw new AppError(httpStatus.FORBIDDEN, "You don't have authorization!");
   }
 
+  // converting new password
+  const newEncryptedPassword = await bcrypt.hash(
+    userData.newPassword,
+    config.hashSaltRounds,
+  );
 
-  
+  //change the password
+  await userModel.findOneAndUpdate(
+    { id: user.id, role: user.role },
+    {
+      password: newEncryptedPassword,
+      isPasswordNeedsChange: false,
+      passwordChangedAt: new Date(),
+    },
+  );
+
+  return null
+
 }
 
 export const authServices = {
