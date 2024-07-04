@@ -8,14 +8,20 @@ import { TFaculty } from '../faculty/faculty.interface';
 import { TUser } from './user.interface';
 
 const createStudent = catchAsync(async (req, res) => {
+
+
+  const image = req.file
   const { password, student } = req.body;
 
   // will call service func to send this data
   const result = (await userServices.createStudentIntoDB(
+    image,
     password,
     student,
   )) as unknown as TStudent;
   // send response
+
+  
 
   const data = {
     statusCode: httpStatus.OK,
@@ -28,9 +34,10 @@ const createStudent = catchAsync(async (req, res) => {
 
 const createAdmin = catchAsync(async (req, res) => {
   const { password, admin } = req.body;
-
+   const image = req.file;
   // will call service func to send this data
   const result = (await userServices.createAdminIntoDB(
+    image,
     password,
     admin,
   )) as unknown as TAdmin;
@@ -47,9 +54,10 @@ const createAdmin = catchAsync(async (req, res) => {
 
 const createFaculty = catchAsync(async (req, res) => {
   const { password, faculty } = req.body;
-
+ const image = req.file;
   // will call service func to send this data
   const result = (await userServices.createFacultyIntoDB(
+    image,
     password,
     faculty,
   )) as unknown as TFaculty;

@@ -18,9 +18,10 @@ import { TAdmin } from '../admin/admin.interface';
 import { Admin } from '../admin/admin.model';
 import { TFaculty } from '../faculty/faculty.interface';
 import { Faculty } from '../faculty/faculty.model';
+import { sendImageToCloudinary } from '../../utils/sendImageToCloudinary';
 
 
-const createStudentIntoDB = async (password: string, studentData: TStudent) => {
+const createStudentIntoDB = async (image:any,password: string, studentData: TStudent) => {
   // find academic semester info
   const admissionSemester = (await AcademicSemester.findById({
     _id: studentData.admissionSemester,
@@ -37,6 +38,10 @@ const createStudentIntoDB = async (password: string, studentData: TStudent) => {
       email: studentData.email,
       role: 'student',
     };
+
+
+    //sending image to cloudinary
+    sendImageToCloudinary()
 
     //creating a user first
     //transaction-1
@@ -65,7 +70,11 @@ const createStudentIntoDB = async (password: string, studentData: TStudent) => {
   }
 };
 
-const createAdminIntoDB = async (password: string, adminData: TAdmin) => {
+const createAdminIntoDB = async (
+  image:any,
+  password: string,
+  adminData: TAdmin,
+) => {
   const session = await mongoose.startSession();
 
   const userData: Partial<TUser> = {
@@ -106,7 +115,11 @@ const createAdminIntoDB = async (password: string, adminData: TAdmin) => {
     );
   }
 };
-const createFacultyIntoDB = async (password: string, facultyData: TFaculty) => {
+const createFacultyIntoDB = async (
+  image:any,
+  password: string,
+  facultyData: TFaculty,
+) => {
   const session = await mongoose.startSession();
 
   const userData: Partial<TUser> = {

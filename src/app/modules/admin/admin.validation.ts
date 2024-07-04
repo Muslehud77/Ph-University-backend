@@ -4,7 +4,7 @@ import { genderValidationSchema } from '../../interfaceSchemaValidation/gender';
 
 const createAdminValidationSchema = z.object({
   body: z.object({
-    password: z.string().min(5),
+    password: z.string().min(5).optional(),
     admin: z.object({
       user: z.string().optional(),
       managementDepartment: z.string(),
@@ -15,7 +15,7 @@ const createAdminValidationSchema = z.object({
       contactNumber: z.string(),
       presentAddress: z.string(),
       permanentAddress: z.string(),
-      profileImage: z.string(),
+      profileImage: z.string().optional(),
       isDeleted: z.boolean().optional(),
     }),
   }),
