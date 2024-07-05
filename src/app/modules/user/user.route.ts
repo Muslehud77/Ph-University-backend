@@ -23,7 +23,7 @@ router.post(
 );
 router.post(
   '/create-faculty',
-  Auth(USER_ROLE.admin),
+  // Auth(USER_ROLE.admin),
   upload.single('file'),
   parseJsonBody(),
   validateRequest(facultyValidations.createFacultyValidationSchema),
