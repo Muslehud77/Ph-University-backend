@@ -12,6 +12,9 @@ const jwt_access_secret = process.env.JWT_ACCESS_SECRET as string;
 const jwt_refresh_secret = process.env.JWT_REFRESH_SECRET as string;
 const jwt_access_expiresIn = process.env.JWT_ACCESS_EXPIRES_IN as string;
 const jwt_refresh_expiresIn = process.env.JWT_REFRESH_EXPIRES_IN as string; 
+const SUPER_ADMIN_PASSWORD = process.env.SUPER_ADMIN_PASSWORD as string; 
+
+
 
 //nodemailer
 const NODE_MAILER_EMAIL = process.env.NODE_MAILER_EMAIL;
@@ -42,4 +45,5 @@ export default {
   CLOUDINARY_API_SECRET,
   CLOUDINARY_API_KEY,
   CLOUDINARY_CLOUD_NAME,
+  SUPER_ADMIN_PASSWORD,
 };
