@@ -74,7 +74,11 @@ const findAllSemesterRegistrationFromDB = async (
     .fieldQuery();
 
   const result = await semesterRegistrationQuery.modelQuery;
-  return result;
+
+
+  const meta = await semesterRegistrationQuery.countTotal();
+
+  return { result, meta };
 };
 
 const updateSemesterRegistrationInDB = async (

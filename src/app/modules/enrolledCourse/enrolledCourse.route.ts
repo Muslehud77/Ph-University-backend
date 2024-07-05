@@ -20,6 +20,8 @@ router.patch(
  validateRequest(enrolledCourseValidation.updateEnrolledCourseMarksValidationSchema),
  enrolledCourseController.updateEnrolledCourse
 );
-
+router.get('/',Auth('admin'),
+enrolledCourseController.getAllEnrolledCourses
+)
 
 export const enrolledCourseRouter = router
