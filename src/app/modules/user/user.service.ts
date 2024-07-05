@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import mongoose from 'mongoose';
 import config from '../../config';
 import { TAcademicSemester } from '../academicSemester/academicSemester.interface';
@@ -39,9 +40,13 @@ const createStudentIntoDB = async (image:any,password: string, studentData: TStu
       role: 'student',
     };
 
-
+    const imageName = `${userData.id}${studentData?.name?.firstName}`
+    const path = image?.path
     //sending image to cloudinary
-    sendImageToCloudinary()
+    const {secure_url} = await sendImageToCloudinary(imageName, path);
+
+    studentData.profileImg = secure_url || '';
+    
 
     //creating a user first
     //transaction-1
@@ -84,6 +89,13 @@ const createAdminIntoDB = async (
     role: 'admin',
   };
 
+   const imageName = `${userData.id}${adminData?.name?.firstName}`;
+   const path = image?.path;
+   //sending image to cloudinary
+   const {secure_url} = await sendImageToCloudinary(imageName, path);
+
+   adminData.profileImage = secure_url || '';
+
   try {
     session.startTransaction();
 
@@ -106,6 +118,7 @@ const createAdminIntoDB = async (
     await session.endSession();
 
     return newAdmin;
+
   } catch (err: any) {
     await session.abortTransaction();
     await session.endSession();
@@ -128,6 +141,13 @@ const createFacultyIntoDB = async (
     email: facultyData.email,
     role: 'faculty',
   };
+
+const imageName = `${userData.id}${facultyData?.name?.firstName}`;
+const path = image?.path;
+//sending image to cloudinary
+const {secure_url} = await sendImageToCloudinary(imageName, path);
+
+facultyData.profileImage = secure_url || ''
 
   try {
     session.startTransaction();
