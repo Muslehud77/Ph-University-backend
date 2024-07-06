@@ -100,6 +100,8 @@ const createAdminIntoDB = async (
 ) => {
   const session = await mongoose.startSession();
 
+  
+
   const userData: Partial<TUser> = {
     id: await generateAdminId(),
     password: password || config.defaultPassword,
@@ -153,6 +155,17 @@ const createFacultyIntoDB = async (
   facultyData: TFaculty,
 ) => {
   const session = await mongoose.startSession();
+
+
+  const academicDepartment = (await AcademicDepartment.findById({
+    _id: facultyData.academicDepartment,
+  })) as TAcademicDepartment;
+
+  if(!academicDepartment){
+    throw new AppError(httpStatus.NOT_FOUND, 'Could not find provided academic department!');
+  }
+
+  facultyData.academicFaculty = academicDepartment.academicFaculty
 
   const userData: Partial<TUser> = {
     id: await generateFacultyId(),

@@ -16,10 +16,15 @@ router.post(
   validateRequest(academicSemesterValidation),
   AcademicSemesterControllers.createAcademicSemester,
 );
-router.get('/', AcademicSemesterControllers.findAllSemestersFromDB);
-router.get('/:id', AcademicSemesterControllers.findSemesterById);
+router.get('/',  Auth('super-admin', 'admin','student','faculty'),AcademicSemesterControllers.findAllSemestersFromDB);
+router.get(
+  '/:id',
+  Auth('super-admin', 'admin', 'student', 'faculty'),
+  AcademicSemesterControllers.findSemesterById,
+);
 router.patch(
   '/:id',
+  Auth('super-admin', 'admin'),
   validateRequest(updateAcademicSemesterValidation),
   AcademicSemesterControllers.updateSemester,
 );

@@ -1,4 +1,4 @@
-import mongoose, { Query } from 'mongoose';
+import mongoose from 'mongoose';
 import { TStudent } from './student.interface';
 import { Student } from './student.model';
 import { userModel } from '../user/user.model';

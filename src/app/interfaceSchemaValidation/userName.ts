@@ -25,7 +25,7 @@ export const userNameSchema = new Schema<TUserName>({
 export const userNameValidationSchema = z.object({
   firstName: z
     .string()
-    .min(5, { message: 'First Name is required' })
+    .min(3, { message: 'First name should at-least be three characters' })
     .trim()
     .refine(
       value =>
@@ -37,7 +37,7 @@ export const userNameValidationSchema = z.object({
   middleName: z.string().trim().optional(),
   lastName: z
     .string()
-    .min(5, { message: 'Last Name is required' })
+    .min(3, { message: 'Last name should at-least be three characters' })
     .trim()
     .regex(/^[a-zA-Z]+$/, {
       message: 'Last Name should only contain alphabetic characters',

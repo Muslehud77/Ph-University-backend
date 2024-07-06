@@ -8,7 +8,7 @@ const createFacultyValidationSchema = z.object({
     faculty: z.object({
       user: z.string().optional(),
       academicDepartment: z.string(),
-      academicFaculty: z.string(),
+      academicFaculty: z.string().optional(),
       designation: z.string(),
       name: userNameValidationSchema,
       gender: genderValidationSchema,

@@ -4,13 +4,19 @@ import validateRequest from '../../middlewares/validateRequest';
 import { studentValidations } from './student.zodValidation';
 import Auth from '../../middlewares/auth';
 
+
 const router = express.Router();
 
-router.get('/', studentControllers.getAllStudent);
-router.get('/:id',Auth("admin","faculty","student"), studentControllers.getStudentByID);
-router.delete('/:id', studentControllers.deleteStudent);
+router.get('/',Auth("super-admin","admin"), studentControllers.getAllStudent);
+router.get('/:id',Auth("super-admin","admin","faculty"), studentControllers.getStudentByID);
+router.delete(
+  '/:id',
+  Auth('super-admin', 'admin'),
+  studentControllers.deleteStudent,
+);
 router.patch(
   '/:id',
+  Auth('super-admin', 'admin'),
   validateRequest(studentValidations.updateStudentValidation),
   studentControllers.updateStudent,
 );
