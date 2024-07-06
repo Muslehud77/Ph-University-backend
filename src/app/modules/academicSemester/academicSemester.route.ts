@@ -6,11 +6,13 @@ import {
   academicSemesterValidation,
   updateAcademicSemesterValidation,
 } from './academicSemester.validation';
+import Auth from '../../middlewares/auth';
 
 const router = express.Router();
 
 router.post(
   '/create-semester',
+  Auth('super-admin','admin'),
   validateRequest(academicSemesterValidation),
   AcademicSemesterControllers.createAcademicSemester,
 );

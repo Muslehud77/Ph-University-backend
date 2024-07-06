@@ -20,13 +20,30 @@ import { Admin } from '../admin/admin.model';
 import { TFaculty } from '../faculty/faculty.interface';
 import { Faculty } from '../faculty/faculty.model';
 import { sendImageToCloudinary } from '../../utils/sendImageToCloudinary';
+import { AcademicDepartment } from './../academicDepartment/academicDepartment.model';
+import { TAcademicDepartment } from '../academicDepartment/academicDepartment.interface';
 
-
-const createStudentIntoDB = async (image:any,password: string, studentData: TStudent) => {
+const createStudentIntoDB = async (
+  image: any,
+  password: string,
+  studentData: TStudent,
+) => {
   // find academic semester info
   const admissionSemester = (await AcademicSemester.findById({
     _id: studentData.admissionSemester,
   })) as TAcademicSemester;
+  const academicDepartment = (await AcademicDepartment.findById({
+    _id: studentData.academicDepartment,
+  })) as TAcademicDepartment;
+
+  if (!admissionSemester || !academicDepartment) {
+    throw new AppError(
+      httpStatus.FORBIDDEN,
+      'Admission semester or Academic department is not present',
+    );
+  }
+
+  studentData.academicFaculty = academicDepartment.academicFaculty;
 
   const session = await mongoose.startSession();
 
@@ -40,13 +57,14 @@ const createStudentIntoDB = async (image:any,password: string, studentData: TStu
       role: 'student',
     };
 
-    const imageName = `${userData.id}${studentData?.name?.firstName}`
-    const path = image?.path
-    //sending image to cloudinary
-    const {secure_url} = await sendImageToCloudinary(imageName, path);
+    if (image) {
+      const imageName = `${userData.id}${studentData?.name?.firstName}`;
+      const path = image?.path;
+      //sending image to cloudinary
+      const { secure_url } = await sendImageToCloudinary(imageName, path);
 
-    studentData.profileImg = secure_url || '';
-    
+      studentData.profileImg = (secure_url as string) || '';
+    }
 
     //creating a user first
     //transaction-1
@@ -76,7 +94,7 @@ const createStudentIntoDB = async (image:any,password: string, studentData: TStu
 };
 
 const createAdminIntoDB = async (
-  image:any,
+  image: any,
   password: string,
   adminData: TAdmin,
 ) => {
@@ -89,12 +107,14 @@ const createAdminIntoDB = async (
     role: 'admin',
   };
 
-   const imageName = `${userData.id}${adminData?.name?.firstName}`;
-   const path = image?.path;
-   //sending image to cloudinary
-   const {secure_url} = await sendImageToCloudinary(imageName, path);
+  if(image){
+    const imageName = `${userData.id}${adminData?.name?.firstName}`;
+    const path = image?.path;
+    //sending image to cloudinary
+    const { secure_url } = await sendImageToCloudinary(imageName, path);
 
-   adminData.profileImage = secure_url || '';
+    adminData.profileImage = (secure_url as string) || '';
+  }
 
   try {
     session.startTransaction();
@@ -118,7 +138,6 @@ const createAdminIntoDB = async (
     await session.endSession();
 
     return newAdmin;
-
   } catch (err: any) {
     await session.abortTransaction();
     await session.endSession();
@@ -129,7 +148,7 @@ const createAdminIntoDB = async (
   }
 };
 const createFacultyIntoDB = async (
-  image:any,
+  image: any,
   password: string,
   facultyData: TFaculty,
 ) => {
@@ -142,12 +161,14 @@ const createFacultyIntoDB = async (
     role: 'faculty',
   };
 
-const imageName = `${userData.id}${facultyData?.name?.firstName}`;
-const path = image?.path;
-//sending image to cloudinary
-const {secure_url} = await sendImageToCloudinary(imageName, path);
+ if(image){
+   const imageName = `${userData.id}${facultyData?.name?.firstName}`;
+   const path = image?.path;
+   //sending image to cloudinary
+   const { secure_url } = await sendImageToCloudinary(imageName, path);
 
-facultyData.profileImage = secure_url || ''
+   facultyData.profileImage = (secure_url as string) || '';
+ }
 
   try {
     session.startTransaction();
@@ -181,8 +202,7 @@ facultyData.profileImage = secure_url || ''
   }
 };
 
-const getMe = async (id:string,role:string) => {
-  
+const getMe = async (id: string, role: string) => {
   const user = await userModel.isUserHasAccess(id);
 
   if (role === 'student') {
@@ -196,10 +216,12 @@ const getMe = async (id:string,role:string) => {
   }
 };
 
-const changeStatus = async (id:string,status:{status:string})=>{
-  const result = await userModel.findByIdAndUpdate({_id:id},status,{new:true})
-  return result
-}
+const changeStatus = async (id: string, status: { status: string }) => {
+  const result = await userModel.findByIdAndUpdate({ _id: id }, status, {
+    new: true,
+  });
+  return result;
+};
 
 export const userServices = {
   createStudentIntoDB,

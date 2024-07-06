@@ -14,12 +14,7 @@ import httpStatus from 'http-status';
 // Define a constant for the optional string type
 const stringTypeOptional = { type: String, trim: true };
 
-const nameValidator = (value: string): boolean => {
-  const toLowercase = value.toLowerCase();
-  const capitalizeString =
-    toLowercase.charAt(0).toUpperCase() + toLowercase.slice(1);
-  return value === capitalizeString;
-};
+
 
 // Define the schema for the guardian
 const guardianSchema = new Schema<TGuardian>({
@@ -114,6 +109,10 @@ const studentSchema = new Schema<TStudent, StudentModel>(
       type: Schema.Types.ObjectId,
       ref: 'AcademicDepartment',
     },
+    academicFaculty: {
+      type: Schema.Types.ObjectId,
+      ref: 'AcademicFaculty',
+    },
     contactNumber: {
       type: String,
       required: [true, 'Contact Number is required'],
@@ -152,7 +151,7 @@ const studentSchema = new Schema<TStudent, StudentModel>(
       type: localGuardianSchema,
       required: [true, 'Local Guardian Details are required'],
     },
-    profileImg: stringTypeOptional,
+    profileImg: {...stringTypeOptional,default: ""},
 
     isDeleted: {
       type: Boolean,

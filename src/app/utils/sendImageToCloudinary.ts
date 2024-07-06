@@ -7,7 +7,7 @@ import fs from 'fs';
 const deleteFile = (path:string) => {
      fs.unlink(path, err => {
        if (err) {
-         reject(err);
+         console.log(err)
        } else {
          console.log('File Has Been Deleted');
        }
@@ -17,7 +17,7 @@ const deleteFile = (path:string) => {
 export const sendImageToCloudinary = (
   imageName: string,
   path: string,
-): Promise<any> => {
+): Promise<Record<string,unknown>> => {
   cloudinary.config({
     cloud_name: config.CLOUDINARY_CLOUD_NAME,
     api_key: config.CLOUDINARY_API_KEY,
@@ -34,7 +34,7 @@ export const sendImageToCloudinary = (
             reject(error)
             deleteFile(path)
         }else{
-            resolve(result)
+            resolve(result as Record<string,unknown>)
             deleteFile(path)
         }
       })

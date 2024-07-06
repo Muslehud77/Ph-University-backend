@@ -1,5 +1,6 @@
 import config from "../config"
-import { UserModel } from './../modules/user/user.interface';
+import { userModel } from "../modules/user/user.model";
+
 
 const superUser = {
     id: '0001',
@@ -12,8 +13,11 @@ const superUser = {
   isDeleted: false,
 }
 
-const seedSuperAdmin = async ()=>{
+export const seedSuperAdmin = async ()=>{
 
-    const isSuperAdminExists = await UserModel.findOne({role:'super-admin'})
+    const isSuperAdminExists = await userModel.findOne({role:'super-admin'})
 
+    if(!isSuperAdminExists){
+        await userModel.create(superUser)
+    }
 }

@@ -1,5 +1,5 @@
 export const USER_ROLE = {
-  super_admin: 'super-admin',
+  "super-admin": 'super-admin',
   student: 'student',
   faculty: 'faculty',
   admin: 'admin',

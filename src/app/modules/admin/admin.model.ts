@@ -43,7 +43,7 @@ const adminSchema = new Schema<TAdmin>(
     contactNumber: { type: String, required: true },
     presentAddress: { type: String, required: true },
     permanentAddress: { type: String, required: true },
-    profileImage: { type: String },
+    profileImage: { type: String ,default: ""},
 
     isDeleted: {
       type: Boolean,
