@@ -188,7 +188,7 @@ const updateEnrolledCourseIntoDB = async (
       offeredCourse,
       student,
     },
-    { _id: 1, courseMarks :1},
+    { _id: 1, courseMarks :1},{new:true}
   );
 
   if(!isEnrolledCourseExists){

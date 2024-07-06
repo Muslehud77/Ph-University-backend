@@ -4,7 +4,7 @@ import { searchableFieldsForCourse } from './course.constant';
 import {
   TCourse,
   TCourseFaculty,
-  TPreRequisiteCourses,
+ 
 } from './course.interface';
 import { Course, CourseFaculty } from './course.model';
 import AppError from '../../errors/AppError';
@@ -183,6 +183,11 @@ const deleteFacultiesFromCourseFromDB = async (
   return result;
 };
 
+const getFacultiesForASingleCourseFromDB = async (id:string)=>{
+const result = await CourseFaculty.findOne({course:id}).populate('faculties').select('faculties')
+return result
+}
+
 export const courseServices = {
   createCourseIntoDB,
   getAllCorsesFromDB,
@@ -191,4 +196,5 @@ export const courseServices = {
   updateSingleCourseInDB,
   assignFacultiesWithCourseIntoDB,
   deleteFacultiesFromCourseFromDB,
+  getFacultiesForASingleCourseFromDB,
 };

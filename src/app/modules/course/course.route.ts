@@ -38,6 +38,12 @@ router.put(
   validateRequest(courseValidation.courseFacultyValidationSchema),
   courseController.assignFacultiesInCourseFaculties,
 );
+router.get(
+  '/:id/get-faculties',
+  Auth('super-admin', 'admin', 'student', 'faculty'),
+ 
+  courseController.getFacultiesForASingleCourse,
+);
 router.delete(
   '/:id/delete-faculties',
   Auth('super-admin', 'admin'),

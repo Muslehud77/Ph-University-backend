@@ -14,11 +14,20 @@ router.post(
   academicDepartmentControllers.createAcademicDepartment,
 );
 
-router.get('/', academicDepartmentControllers.getAllAcademicDepartments);
-router.get('/:id', academicDepartmentControllers.getAcademicDepartmentById);
+router.get(
+  '/',
+  Auth('super-admin', 'admin', 'student', 'faculty'),
+  academicDepartmentControllers.getAllAcademicDepartments,
+);
+router.get(
+  '/:id',
+  Auth('super-admin', 'admin', 'student', 'faculty'),
+  academicDepartmentControllers.getAcademicDepartmentById,
+);
 
 router.patch(
   '/:id',
+  Auth('super-admin', 'admin'),
   validateRequest(
     academicDepartmentValidation.updateAcademicDepartmentValidation,
   ),

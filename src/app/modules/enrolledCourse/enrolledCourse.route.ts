@@ -16,11 +16,11 @@ router.post(
 );
 router.patch(
   '/update-enrolled-course-marks',
-  Auth('faculty'),
+   Auth('super-admin', 'admin', 'student', 'faculty'),
  validateRequest(enrolledCourseValidation.updateEnrolledCourseMarksValidationSchema),
  enrolledCourseController.updateEnrolledCourse
 );
-router.get('/',Auth('admin'),
+router.get('/', Auth('super-admin', 'admin', 'faculty'),
 enrolledCourseController.getAllEnrolledCourses
 )
 

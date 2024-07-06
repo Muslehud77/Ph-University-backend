@@ -86,6 +86,27 @@ const updateSingleCourse = catchAsync(async (req, res) => {
   sendResponse<TCourse>(res, data);
 });
 
+const getFacultiesForASingleCourse = catchAsync(async (req, res) => {
+  const id = req.params.id;
+
+  
+
+  const result = (await courseServices.getFacultiesForASingleCourseFromDB(
+    id,
+    
+  )) as unknown as TCourseFaculty;
+
+  const data = {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Retrieved the faculties successfully',
+    data: result,
+  };
+
+  sendResponse<TCourseFaculty>(res, data);
+});
+
+
 const assignFacultiesInCourseFaculties = catchAsync(async (req, res) => {
   const id = req.params.id;
 
@@ -105,6 +126,8 @@ const assignFacultiesInCourseFaculties = catchAsync(async (req, res) => {
 
   sendResponse<TCourseFaculty>(res, data);
 });
+
+
 const deleteFacultiesFromCourseFaculties = catchAsync(async (req, res) => {
   const id = req.params.id;
 
@@ -133,4 +156,5 @@ export const courseController = {
   getCourseById,
   assignFacultiesInCourseFaculties,
   deleteFacultiesFromCourseFaculties,
+  getFacultiesForASingleCourse,
 };

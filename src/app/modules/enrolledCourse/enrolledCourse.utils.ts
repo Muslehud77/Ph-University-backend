@@ -4,6 +4,8 @@ export const calculateGradeAndPoints = (marks: number) => {
     gradePoints: 0,
   };
 
+
+
   if (marks >= 0 && marks <= 19) {
     if (marks === 0) {
       result.grade = 'N/A';

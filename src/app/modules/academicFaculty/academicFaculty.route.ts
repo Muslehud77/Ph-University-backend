@@ -12,10 +12,19 @@ router.post(
   validateRequest(academicFacultyValidation),
   academicFacultyControllers.createAcademicFaculty,
 );
-router.get('/', academicFacultyControllers.getAllAcademicFaculty);
-router.get('/:id', academicFacultyControllers.getAcademicFacultyById);
+router.get(
+  '/',
+  Auth('super-admin', 'admin', 'student', 'faculty'),
+  academicFacultyControllers.getAllAcademicFaculty,
+);
+router.get(
+  '/:id',
+  Auth('super-admin', 'admin', 'student', 'faculty'),
+  academicFacultyControllers.getAcademicFacultyById,
+);
 router.patch(
   '/:id',
+  Auth('super-admin', 'admin'),
   validateRequest(academicFacultyValidation),
   academicFacultyControllers.updateAcademicFacultyById,
 );

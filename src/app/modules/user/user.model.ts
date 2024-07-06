@@ -45,6 +45,8 @@ userSchema.statics.isUserHasAccess = async function (id: string) {
  
   const user = await userModel.isUserExistsByCustomId(id);
   
+
+
   //check if the user is deleted
   if (user.isDeleted !== false) {
     throw new AppError(httpStatus.FORBIDDEN, 'This is a deleted user!');
