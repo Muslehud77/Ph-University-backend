@@ -23,5 +23,8 @@ router.patch(
 router.get('/', Auth('super-admin', 'admin', 'faculty'),
 enrolledCourseController.getAllEnrolledCourses
 )
+router.get('/my-enrolled-courses', Auth('student'),
+enrolledCourseController.myEnrolledCourses
+)
 
 export const enrolledCourseRouter = router

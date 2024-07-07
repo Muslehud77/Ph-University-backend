@@ -80,7 +80,8 @@ const getAllSemesterRegistration = catchAsync(async (req, res) => {
     statusCode: httpStatus.OK,
     success: true,
     message: 'Here is All the Semester Registrations',
-    data: result,
+    meta: result.meta,
+    data: result.result,
   };
 
   sendResponse(res, data);

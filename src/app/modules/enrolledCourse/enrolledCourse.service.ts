@@ -13,6 +13,8 @@ import { Faculty } from '../faculty/faculty.model';
 import { SemesterRegistration } from '../semesterRegistration/semesterRegistration.model';
 import { calculateGradeAndPoints } from './enrolledCourse.utils';
 
+import { userModel } from '../user/user.model';
+
 const createEnrolledCourseIntoDB = async (
   id: string,
   data: { offeredCourse: string },
@@ -230,12 +232,27 @@ const updateEnrolledCourseIntoDB = async (
 };
 
 const getAllEnrolledCoursesFromDB = async ()=>{
+
+
   const result = await EnrolledCourse.find()
   return result
+}
+
+const getMyEnrolledCoursesFromDB = async(id:string)=>{
+  await userModel.isUserHasAccess(id)
+  const {_id} = await Student.findOne({id}).populate('_id') as {_id:string}
+
+  const enrolledCourses = await EnrolledCourse.find({student:_id})
+
+  return enrolledCourses;
+  
+
+
 }
 
 export const enrolledCourseServices = {
   createEnrolledCourseIntoDB,
   updateEnrolledCourseIntoDB,
   getAllEnrolledCoursesFromDB,
+  getMyEnrolledCoursesFromDB,
 };

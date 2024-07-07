@@ -42,6 +42,21 @@ const updateEnrolledCourse = catchAsync(async (req, res) => {
 
   sendResponse<TEnrolledCourse>(res, data);
 });
+const myEnrolledCourses = catchAsync(async (req, res) => {
+  
+  const {id} = req.user 
+
+  const result =
+    await enrolledCourseServices.getMyEnrolledCoursesFromDB(id) as unknown as TEnrolledCourse[];
+  const data = {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'My Enrolled CoursesRetrieved successfully',
+    data: result,
+  };
+
+  sendResponse<TEnrolledCourse[]>(res, data);
+});
 const getAllEnrolledCourses = catchAsync(async (req, res) => {
   
   
@@ -66,4 +81,5 @@ export const enrolledCourseController = {
   createEnrolledCourse,
   updateEnrolledCourse,
   getAllEnrolledCourses,
+  myEnrolledCourses,
 }; 

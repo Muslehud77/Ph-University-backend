@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { v2 as cloudinary } from 'cloudinary';
+import { UploadApiResponse, v2 as cloudinary } from 'cloudinary';
 import config from '../config';
 import multer from 'multer';
 import fs from 'fs';
@@ -34,7 +34,7 @@ export const sendImageToCloudinary = (
             reject(error)
             deleteFile(path)
         }else{
-            resolve(result as Record<string,unknown>)
+            resolve(result as UploadApiResponse)
             deleteFile(path)
         }
       })

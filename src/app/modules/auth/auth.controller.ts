@@ -14,7 +14,10 @@ const loginUser = catchAsync(async (req, res) => {
   const {accessToken, refreshToken,isPasswordNeedsChange } = result;
   res.cookie('refreshToken', refreshToken,{
     secure:config.node_env === "production",
-    httpOnly:true
+    httpOnly:true,
+    sameSite:'none',
+    maxAge: 1000*60*60*24*365
+
   });
 
   const data = {
