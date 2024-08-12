@@ -54,13 +54,16 @@ const getAcademicFacultyById = catchAsync(async (req, res) => {
 });
 
 const getAllAcademicFaculty = catchAsync(async (req, res) => {
-  const result = await academicFacultyServices.getAllAcademicFacultiesFromDB();
+  const query = req.query
+  const result =
+    await academicFacultyServices.getAllAcademicFacultiesFromDB(query);
 
   const data = {
     statusCode: httpStatus.OK,
     success: true,
     message: 'Here is All the Academic Faculties',
-    data: result,
+    meta: result.meta,
+    data: result.result,
   };
 
   sendResponse(res, data);

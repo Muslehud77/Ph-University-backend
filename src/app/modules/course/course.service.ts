@@ -25,7 +25,8 @@ const getAllCorsesFromDB = async (query: Record<string, unknown>) => {
     .sort()
     .paginate()
     .fieldQuery();
-  const result = await courseQuery.modelQuery;
+
+   const result = await courseQuery.modelQuery;
   
    const meta = await courseQuery.countTotal();
 

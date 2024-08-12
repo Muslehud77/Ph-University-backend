@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+
 import QueryBuilder from '../../builder/QueryBuilder';
 // import { offeredCourseSearchableFields } from './offeredCourse.constant';
 import {

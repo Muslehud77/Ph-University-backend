@@ -57,13 +57,16 @@ const findSemesterById = catchAsync(async (req, res) => {
 });
 
 const findAllSemestersFromDB = catchAsync(async (req, res) => {
-  const result = await academicSemesterServices.findAllSemestersFromDB();
+  const query = req.query
+  const result = await academicSemesterServices.findAllSemestersFromDB(query);
+  
 
   const data = {
     statusCode: httpStatus.OK,
     success: true,
     message: 'Here is All the semesters',
-    data: result,
+    meta: result.meta,
+    data: result.result,
   };
 
   sendResponse(res, data);

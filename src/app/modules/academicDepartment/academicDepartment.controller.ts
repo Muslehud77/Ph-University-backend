@@ -2,7 +2,7 @@ import httpStatus from 'http-status';
 import catchAsync from '../../utils/catchAsync';
 import { academicDepartmentServices } from './academicDepartment.service';
 import { TAcademicDepartment } from './academicDepartment.interface';
-import sendResponse from '../../utils/sendResponse';
+import sendResponse, { TMeta } from '../../utils/sendResponse';
 
 const createAcademicDepartment = catchAsync(async (req, res) => {
   const academicDepartment = req.body;
@@ -22,17 +22,19 @@ const createAcademicDepartment = catchAsync(async (req, res) => {
 });
 
 const getAllAcademicDepartments = catchAsync(async (req, res) => {
+  const query = req.query
   const result =
-    (await academicDepartmentServices.getAllAcademicDepartmentsFromDB()) as [];
+    (await academicDepartmentServices.getAllAcademicDepartmentsFromDB(query)) as {result:TAcademicDepartment[], meta:TMeta};
 
   const data = {
     statusCode: httpStatus.OK,
     success: true,
     message: 'All Academic Department Retrieved Successfully',
-    data: result,
+    meta: result.meta,
+    data: result.result,
   };
 
-  sendResponse<[]>(res, data);
+  sendResponse<TAcademicDepartment[]>(res, data);
 });
 
 const getAcademicDepartmentById = catchAsync(async (req, res) => {

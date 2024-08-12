@@ -80,10 +80,20 @@ const changePassword = async (
 
 const refreshTokenService = async (refreshToken: string) => {
 
-  const decoded = jwt.verify(
-    refreshToken,
-    config.jwt_refresh_secret,
-  ) as JwtPayload;
+  let decoded = {} as JwtPayload
+ 
+  
+    try {
+      decoded = jwt.verify(
+        refreshToken,
+        config.jwt_refresh_secret,
+      ) as JwtPayload;
+    } catch (err: any) {
+      throw new AppError(
+        httpStatus.UNAUTHORIZED,
+        err.message || 'Unauthorized!',
+      );
+    }
 
   const { id, iat } = decoded;
 
