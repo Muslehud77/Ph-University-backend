@@ -2,6 +2,7 @@ import { Types } from 'mongoose';
 import { TUserName } from '../../interfaceSchemaValidation/userName';
 
 export type TFaculty = {
+  _id:string
   id: string;
   user: Types.ObjectId;
   academicDepartment: Types.ObjectId;

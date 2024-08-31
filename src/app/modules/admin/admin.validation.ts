@@ -7,7 +7,7 @@ const createAdminValidationSchema = z.object({
     password: z.string().min(5).optional(),
     admin: z.object({
       user: z.string().optional(),
-      managementDepartment: z.string(),
+   
       designation: z.string(),
       name: userNameValidationSchema,
       gender: genderValidationSchema,

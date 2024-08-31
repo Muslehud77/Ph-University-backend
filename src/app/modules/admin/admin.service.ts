@@ -8,7 +8,7 @@ import httpStatus from 'http-status';
 import { userModel } from '../user/user.model';
 
 const getAllAdminFromDB = async (query: Record<string, unknown>) => {
-  const adminQuery = new QueryBuilder(Admin.find(), query)
+  const adminQuery = new QueryBuilder(Admin.find().populate("user"), query)
     .search(adminSearchableFields)
     .filter()
     .sort()
@@ -25,6 +25,7 @@ const getAllAdminFromDB = async (query: Record<string, unknown>) => {
 
 const getAdminByIdFromDB = async (id: string) => {
   const result = await Admin.findById({ _id: id });
+  
   return result;
 };
 

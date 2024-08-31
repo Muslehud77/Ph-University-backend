@@ -14,6 +14,11 @@ import { SemesterRegistration } from '../semesterRegistration/semesterRegistrati
 import { calculateGradeAndPoints } from './enrolledCourse.utils';
 
 import { userModel } from '../user/user.model';
+import { TUserRole } from '../user/user.interface';
+import { USER_ROLE } from '../user/user.constant';
+import { JwtPayload } from 'jsonwebtoken';
+import { TFaculty } from '../faculty/faculty.interface';
+import QueryBuilder from '../../builder/QueryBuilder';
 
 const createEnrolledCourseIntoDB = async (
   id: string,
@@ -231,22 +236,63 @@ const updateEnrolledCourseIntoDB = async (
  return result
 };
 
-const getAllEnrolledCoursesFromDB = async ()=>{
+const getAllEnrolledCoursesFromDB = async (user:JwtPayload,query : Record<string,unknown>)=>{
 
+  if(user.role === USER_ROLE.faculty){
+    
+    
+    const {_id} = await Faculty.findOne({id:user.id}).select("_id") as Pick<TFaculty,"_id">
+    
+    const enrollCOurseQuery = new QueryBuilder(
+      EnrolledCourse.find({ faculty: _id }).populate(
+        'semesterRegistration academicSemester academicFaculty offeredCourse academicDepartment course faculty student',
+      ),
+      query,
+    )
+      .search([])
+      .filter()
+      .sort()
+      .paginate()
+      .fieldQuery();
+   
+       const result = await enrollCOurseQuery.modelQuery;
 
-  const result = await EnrolledCourse.find()
-  return result
+       const meta = await enrollCOurseQuery.countTotal();
+
+    return {result,meta};
+  }else{
+     const enrollCOurseQuery = new QueryBuilder(
+       EnrolledCourse.find().populate(
+         'semesterRegistration academicSemester academicFaculty offeredCourse academicDepartment course faculty student',
+       ),
+       query,
+     )
+       .search([])
+       .filter()
+       .sort()
+       .paginate()
+       .fieldQuery();
+
+     const result = await enrollCOurseQuery.modelQuery;
+
+     const meta = await enrollCOurseQuery.countTotal();
+
+     return { result, meta };
+  }
+
+  
 }
 
 const getMyEnrolledCoursesFromDB = async(id:string)=>{
   await userModel.isUserHasAccess(id)
   const {_id} = await Student.findOne({id}).populate('_id') as {_id:string}
 
-  const enrolledCourses = await EnrolledCourse.find({student:_id})
+  const enrolledCourses = await EnrolledCourse.find({ student: _id }).populate(
+    'semesterRegistration academicSemester academicFaculty offeredCourse academicDepartment course faculty',
+  );
 
   return enrolledCourses;
   
-
 
 }
 

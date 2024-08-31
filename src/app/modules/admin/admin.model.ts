@@ -13,11 +13,6 @@ const adminSchema = new Schema<TAdmin>(
       unique: true,
       ref: 'User',
     },
-    managementDepartment: {
-      type: Schema.Types.ObjectId,
-      required: true,
-      ref: 'ManagementDepartment',
-    },
     designation: { type: String, required: true },
     name: userNameSchema,
     gender: {

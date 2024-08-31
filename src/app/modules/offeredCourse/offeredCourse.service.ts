@@ -123,8 +123,9 @@ const createOfferedCourseIntoDB = async (offeredCourseData: TOfferedCourse) => {
 };
 
 const getAllOfferedCourseFromDB = async (query: Record<string, unknown>) => {
+  
   const offeredCourseQuery = new QueryBuilder(OfferedCourse.find(), query)
-    .search([])
+    .search(["title"])
     .filter()
     .sort()
     .paginate()
@@ -262,8 +263,8 @@ const getMyOfferedCourseFromDB = async (
     {
       $match: {
         semesterRegistration: currentOngoingRegistrationSemester?._id,
-        academicFaculty: student.academicFaculty,
-        academicDepartment: student.academicDepartment,
+        academicFaculty: student?.academicFaculty,
+        academicDepartment: student?.academicDepartment,
       },
     },
     {
@@ -283,7 +284,7 @@ const getMyOfferedCourseFromDB = async (
         let: {
           currentOngoingRegistrationSemester:
             currentOngoingRegistrationSemester._id,
-          currentStudent: student._id,
+          currentStudent: student?._id,
         },
         pipeline: [
           {
@@ -314,7 +315,7 @@ const getMyOfferedCourseFromDB = async (
       $lookup: {
         from: 'enrolledcourses',
         let: {
-          currentStudent: student._id,
+          currentStudent: student?._id,
         },
         pipeline: [
           {

@@ -14,15 +14,18 @@ router.post(
  validateRequest(enrolledCourseValidation.createEnrolledCourseValidationSchema),
  enrolledCourseController.createEnrolledCourse
 );
+
 router.patch(
   '/update-enrolled-course-marks',
-   Auth('super-admin', 'admin', 'student', 'faculty'),
+   Auth('super-admin','faculty'),
  validateRequest(enrolledCourseValidation.updateEnrolledCourseMarksValidationSchema),
  enrolledCourseController.updateEnrolledCourse
 );
+
 router.get('/', Auth('super-admin', 'admin', 'faculty'),
 enrolledCourseController.getAllEnrolledCourses
 )
+
 router.get('/my-enrolled-courses', Auth('student'),
 enrolledCourseController.myEnrolledCourses
 )

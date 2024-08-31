@@ -233,6 +233,7 @@ const changeStatus = async (id: string, status: { status: string }) => {
   const result = await userModel.findByIdAndUpdate({ _id: id }, status, {
     new: true,
   });
+ 
   return result;
 };
 

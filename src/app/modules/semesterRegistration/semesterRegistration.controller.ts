@@ -33,7 +33,7 @@ const updateSemesterRegistrationById = catchAsync(async (req, res) => {
   const data = {
     statusCode: httpStatus.OK,
     success: true,
-    message: 'Semester RegistrationUpdated Successfully',
+    message: 'Semester Registration Updated Successfully',
     data: result,
   };
 

@@ -4,7 +4,7 @@ import { TUserName } from '../../interfaceSchemaValidation/userName';
 export type TAdmin = {
   id: string;
   user: Types.ObjectId;
-  managementDepartment: Types.ObjectId;
+
   designation: string;
   name: TUserName;
   gender: 'male' | 'female' | 'others';
